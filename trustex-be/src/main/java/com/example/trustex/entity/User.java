@@ -1,21 +1,42 @@
 package com.example.trustex.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name="users")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class User extends  BaseEntity implements UserDetails {
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserType userType;
     private String firstname;
     private String lastname;
     private String email;
+    private String idNumber; // TC kimlik numarası
+    private String mobilePhone;
+    private String country;
+    private LocalDate dateOfBirth;
     private String password;
+
+    private String corporateCustomerNumber;
+    private String representativeIdNumber; // Şirket yetkilisine ait TC kimlik numarası
+    private String commercialRegistrationNumber;
+    private String mersisNumber;
+    private String companyTitle;
     @Enumerated(EnumType.STRING)
     private Role role;
     private boolean verified;
@@ -30,8 +51,7 @@ public class User extends  BaseEntity implements UserDetails {
         this.verified = verified;
     }
 
-    public User() {
-    }
+
 
 
     public Role getRole() {

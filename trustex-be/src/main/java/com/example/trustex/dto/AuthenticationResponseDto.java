@@ -6,9 +6,17 @@ public class AuthenticationResponseDto {
 
     private long userId;
 
-    public AuthenticationResponseDto(String token, long userId) {
+    private String message;
+
+    public AuthenticationResponseDto(String token, String message) {
+        this.token = token;
+        this.message=message;
+    }
+
+    public AuthenticationResponseDto(String token, long userId, String message) {
         this.token = token;
         this.userId = userId;
+        this.message = message;
     }
 
     public AuthenticationResponseDto(String token) {
@@ -33,5 +41,13 @@ public class AuthenticationResponseDto {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

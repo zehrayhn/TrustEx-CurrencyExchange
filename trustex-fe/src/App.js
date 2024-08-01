@@ -43,7 +43,10 @@ function App() {
             path="/auth" 
             element={!isAuthenticated ? <Auth onLogin={handleLogin} /> : <Navigate to="/" />} 
           />
-
+{/* {   <Route 
+            path="/auth/register" 
+            element={!isAuthenticated ? <Auth onLogin={handleLogin} /> : <Navigate to="/" />} 
+          />} */}
        </Routes>
       </BrowserRouter>
     </div>
