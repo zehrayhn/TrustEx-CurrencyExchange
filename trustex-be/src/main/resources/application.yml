@@ -4,11 +4,11 @@ spring:
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=TrustEXDB;trustServerCertificate=true
     username: sa
-    password: infina2024
+    password: admin
   jpa:
     hibernate:
-      ddl-auto: create-drop
-      show-sql: true
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.SQLServerDialect

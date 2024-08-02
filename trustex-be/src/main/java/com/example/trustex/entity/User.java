@@ -31,15 +31,17 @@ public class User extends BaseEntity implements UserDetails {
     private String country; //! ???
     private LocalDate dateOfBirth;
     private String password;
-
     private String corporateCustomerNumber;
     private String representativeIdNumber; // Şirket yetkilisine ait TC kimlik numarası
     private String commercialRegistrationNumber;
     private String mersisNumber;
     private String companyTitle;
 
-    @OneToOne
-    private Wallet wallet;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Assets> assets;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Transaction> transactions;
 
     @Enumerated(EnumType.STRING)
     private Role role;

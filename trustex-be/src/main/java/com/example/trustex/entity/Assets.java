@@ -1,15 +1,14 @@
 package com.example.trustex.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name="assets")
 @Getter
 @Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Assets {
 
     @Id
@@ -18,10 +17,12 @@ public class Assets {
 
     private String assetName;
 
-    @ManyToOne
-    private Wallet wallet;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
+    @JoinColumn(name = "currency_code")
     private Currency currency;
 
     @Column(nullable = false)

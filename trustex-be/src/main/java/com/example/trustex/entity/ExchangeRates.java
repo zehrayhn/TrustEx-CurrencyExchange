@@ -3,8 +3,6 @@ package com.example.trustex.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -23,8 +21,8 @@ public class ExchangeRates {
     @JoinColumn(name = "currencyCode")
     @JsonProperty("conversion_rates")
     private Currency currency;
-
-    private Double rate;
+    private Double sellRate;
+    private Double buyRate;
 
     @Column(nullable = false)
     LocalDateTime timeStamp;

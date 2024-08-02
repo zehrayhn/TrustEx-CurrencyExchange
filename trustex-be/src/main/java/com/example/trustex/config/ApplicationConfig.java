@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class ApplicationConfig {
                 throw new UsernameNotFoundException("User not found");
             }
             List<GrantedAuthority> authoritiesList = new ArrayList<>();
-      //      authoritiesList.add(new SimpleGrantedAuthority(user.getRole().toString()));
+      //     authoritiesList.add(new SimpleGrantedAuthority(user.getRole().toString()));
             authoritiesList.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
             logger.info("User role: " + user.getRole());
             return new org.springframework.security.core.userdetails.User(
@@ -67,6 +68,11 @@ public class ApplicationConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }

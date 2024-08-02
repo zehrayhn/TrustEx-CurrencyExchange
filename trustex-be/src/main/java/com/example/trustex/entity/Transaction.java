@@ -2,8 +2,7 @@ package com.example.trustex.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -18,10 +17,12 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne
+    @JoinColumn(name = "currency_code")
     private Currency currencyCode;
 
     @Enumerated(EnumType.STRING)

@@ -18,10 +18,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         //response a error u ekledik. herhangi bir authorization sorunu olduğunda yani bir error geldiğinde unauthorized diye response a ekleyeceğiz.
-        logger.error("Unauthorized: " + authException.getMessage());
-        logger.error("Requested URL: " + request.getRequestURI());
-    //    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
-//response.sendError(401,"Unauthorized");
+        logger.error("Unauthorized: %s " , authException.getMessage());
+        logger.error("Requested URL: %s " , request.getRequestURI());
+
+        //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+        //response.sendError(401,"Unauthorized");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Unauthorized Message: ");
 

@@ -120,7 +120,7 @@ user.setIdNumber(request.getIdNumber());
     }
 
     @Override
-    public User validateUser(String email, String password) {
+    public User validateUser(String email, String password)  {
         User user = userRepository.findByEmail(email);
         if(user==null){
             throw new RuntimeException("User not found");
