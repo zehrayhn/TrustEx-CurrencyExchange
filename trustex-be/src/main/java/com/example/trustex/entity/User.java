@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class User extends  BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserType userType;
@@ -28,7 +28,7 @@ public class User extends  BaseEntity implements UserDetails {
     private String email;
     private String idNumber; // TC kimlik numarası
     private String mobilePhone;
-    private String country;
+    private String country; //! ???
     private LocalDate dateOfBirth;
     private String password;
 
@@ -37,6 +37,10 @@ public class User extends  BaseEntity implements UserDetails {
     private String commercialRegistrationNumber;
     private String mersisNumber;
     private String companyTitle;
+
+    @OneToOne
+    private Wallet wallet;
+
     @Enumerated(EnumType.STRING)
     private Role role;
     private boolean verified;
@@ -50,8 +54,6 @@ public class User extends  BaseEntity implements UserDetails {
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
-
-
 
 
     public Role getRole() {
@@ -99,7 +101,7 @@ public class User extends  BaseEntity implements UserDetails {
 
 
     public void setPassword(String password) {
-        this.password=password;
+        this.password = password;
 
     }
 

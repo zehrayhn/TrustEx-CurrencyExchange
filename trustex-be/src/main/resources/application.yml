@@ -2,12 +2,12 @@ spring:
   application:
     name: trustex
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=forexDB;trustServerCertificate=true
-    username: zehra
-    password: ${DB_PASSWORD}
+    url: jdbc:sqlserver://localhost:1433;databaseName=TrustEXDB;trustServerCertificate=true
+    username: sa
+    password: infina2024
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       show-sql: true
     properties:
       hibernate:
