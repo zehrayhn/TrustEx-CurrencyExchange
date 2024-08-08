@@ -7,6 +7,7 @@ import lombok.*;
 @Table(name="assets")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Assets {

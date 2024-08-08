@@ -1,9 +1,7 @@
 package com.example.trustex.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +9,9 @@ import java.time.LocalDateTime;
 @Table(name = "transactions")
 @Getter
 @Setter
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Transaction {
 
     @Id
@@ -21,9 +22,13 @@ public class Transaction {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "currency_code")
-    private Currency currencyCode;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "base_currency_code")
+    private Currency baseCurrency;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "target_currency_code")
+    private Currency targetCurrency;
 
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
@@ -34,12 +39,13 @@ public class Transaction {
     @Column(nullable = false)
     private double currencyRate;
 
-    private Double commissionRate;
+    private Double commissionAmount;
+
+    private Double foreignExchangeTax;
 
     private double total;
 
     @Column(nullable = false)
     private LocalDateTime transactionDate;
-
 
 }

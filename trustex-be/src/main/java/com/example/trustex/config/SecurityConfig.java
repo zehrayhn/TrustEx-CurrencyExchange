@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +29,29 @@ public class SecurityConfig {
 
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private static final Logger logger = LogManager.getLogger(SecurityConfig.class);
+    private static final String[] WHITE_LIST_URL = {"/auth/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/authPage/register",
+            "/webjars/**",
+            "/actuator/health/**",
+            "/actuator/health/readiness",
+            "/authPage/login",
+            "/api/v1/auth/**",
+            "/auth/register",
+            "/auth/login",
+            "/auth/verify",
+            "/login",
+            "/verify",
+            "/swagger-ui.html"};
+
 
 
 
@@ -59,6 +83,7 @@ public class SecurityConfig {
                 })
 
                 .logout(l -> l.logoutUrl("/log"));
+                 http.headers(header -> header.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*")));
 
         return http.build();
     }

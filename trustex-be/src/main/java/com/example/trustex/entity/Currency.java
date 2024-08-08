@@ -14,7 +14,9 @@ public class Currency {
 
     @Id
     private String currencyCode;
+    @JoinColumn(name = "currency_label_en")
     private String currencyLabelEN;
+    @JoinColumn(name = "currency_label_tr")
     private String currencyLabelTR;
     @OneToMany(mappedBy = "currency")
     private List<ExchangeRates> exchangeRates;
@@ -22,4 +24,9 @@ public class Currency {
     @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Assets> assets;
 
+    @OneToMany(mappedBy = "baseCurrency", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Transaction> baseTransactions;
+
+    @OneToMany(mappedBy = "baseCurrency", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Transaction> targetTransactions;
 }

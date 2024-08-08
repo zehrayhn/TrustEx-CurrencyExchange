@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 public class ExchangeRateResponseDto {
     private String currencyCode;
     private String currencyLabelTR;
-    private Double conversionRate;
-    private LocalDateTime timeLastUpdateUtc;
+    private Double buyRate;
+    private Double sellRate;
+    private LocalDateTime timeStamp;
 
 }
