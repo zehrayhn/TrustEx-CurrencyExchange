@@ -31,7 +31,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final static String API_KEY = "5c1ad86e9d25c95e17955a19";
 
     //Scheduled task to get exchange rates from the external API
-    @Scheduled(cron = "0 2 * * * ?") //
+    @Scheduled(cron = "0 1 * * * ?") //
     public String getExchangeRateFromApi() {
         //Requests to external API to get exchange rates
         String url = "https://v6.exchangerate-api.com/v6/"+API_KEY+"/latest/"+BASE_CODE;
@@ -42,17 +42,21 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         //Extracting the response
         Long timeLastUpdateUnix = ((Number) response.get("time_last_update_unix")).longValue();
         Map<String, Number> conversionRates = (Map<String, Number>) response.get("conversion_rates");
+
         //Converting the time to local time
         LocalDateTime utcDateTime  = LocalDateTime.ofEpochSecond(timeLastUpdateUnix, 0, java.time.ZoneOffset.UTC);
         ZonedDateTime utcZonedDateTime = utcDateTime.atZone(ZoneOffset.UTC);
         ZonedDateTime zonedTimeStamp = utcZonedDateTime.withZoneSameInstant(ZoneId.of("Europe/Istanbul"));
         LocalDateTime timeStamp = zonedTimeStamp.toLocalDateTime();
+
         //Saving the exchange rates to the database
         for (Map.Entry<String, Number> entry : conversionRates.entrySet()) {
             String currencyCode = entry.getKey();
             Double rate = entry.getValue().doubleValue();
+
             //Finding the currency from the database
             Currency currency = currencyRepository.findById(currencyCode).orElseThrow(()-> new RuntimeException("Currency not found"));
+
             ExchangeRates exchangeRate = new ExchangeRates();
             exchangeRate.setCurrency(currency);
             exchangeRate.setBuyRate(rate);
@@ -72,8 +76,9 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
             ExchangeRateResponseDto exchangeRateCurrency = new ExchangeRateResponseDto();
             exchangeRateCurrency.setCurrencyCode(exchangeRate.getCurrency().getCurrencyCode());
             exchangeRateCurrency.setCurrencyLabelTR(exchangeRate.getCurrency().getCurrencyLabelTR());
-            exchangeRateCurrency.setConversionRate(exchangeRate.getBuyRate());
-            exchangeRateCurrency.setTimeLastUpdateUtc(exchangeRate.getTimeStamp());
+            exchangeRateCurrency.setBuyRate(exchangeRate.getBuyRate());
+            exchangeRateCurrency.setSellRate(exchangeRate.getSellRate());
+            exchangeRateCurrency.setTimeStamp(exchangeRate.getTimeStamp());
             exchangeRateCurrencies.add(exchangeRateCurrency);
         }
         return exchangeRateCurrencies;
