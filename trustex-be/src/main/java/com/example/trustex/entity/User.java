@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class User extends  BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserType userType;
@@ -30,7 +30,7 @@ public class User extends  BaseEntity implements UserDetails {
     private String email;
     private String idNumber;
     private String mobilePhone;
-    private String country;
+    private String country; //! ???
     private LocalDate dateOfBirth;
     private String password;
     private String confirmPassword;
@@ -38,6 +38,13 @@ public class User extends  BaseEntity implements UserDetails {
     private String commercialRegistrationNumber;
     private String mersisNumber;
     private String companyTitle;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Assets> assets;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Transaction> transactions;
+
     @Enumerated(EnumType.STRING)
     private Role role;
     private boolean verified;
@@ -117,7 +124,7 @@ public class User extends  BaseEntity implements UserDetails {
 
 
     public void setPassword(String password) {
-        this.password=password;
+        this.password = password;
 
     }
 

@@ -39,10 +39,10 @@ public class RegisterValidator implements Validator {
 
 
         if (request.getPassword() == null || request.getPassword().isEmpty()) {
-            errors.rejectValue("password", "field.required", "Şifre zorunludur.");
-        } else if (request.getConfirmPassword() == null || !request.getPassword().equals(request.getConfirmPassword())) {
+            errors.rejectValue("password", "field.required", "Şifre zorunludur.");}
+         else if (request.getConfirmPassword() == null || !request.getPassword().equals(request.getConfirmPassword())){
             errors.rejectValue("confirmPassword", "field.mismatch", "Şifre doğrulaması uyuşmuyor.");
-        }
+       }
 
 
         if (request.getMobilePhone() == null || request.getMobilePhone().isEmpty()) {

@@ -1,7 +1,13 @@
 package com.example.trustex.controller;
 
-import com.example.trustex.dto.*;
+import com.example.trustex.config.SecurityConfig;
+import com.example.trustex.dto.AuthenticateRequestDto;
+import com.example.trustex.dto.AuthenticationResponseDto;
+import com.example.trustex.dto.RegisterRequestDto;
+import com.example.trustex.entity.User;
+import com.example.trustex.exception.InvalidCredentialsException;
 import com.example.trustex.service.AuthenticationService;
+import com.example.trustex.service.UserService;
 import com.example.trustex.util.ErrorUtils;
 import com.example.trustex.validator.LoginValidator;
 import com.example.trustex.validator.RegisterValidator;
@@ -11,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +28,21 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private final UserService userService;
     private final LoginValidator loginValidator;
     private final RegisterValidator registerValidator;
     private static final Logger logger = LogManager.getLogger(AuthenticationController.class);
 
+//efsd
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDto request,BindingResult bindingResult){
         registerValidator.validate(request, bindingResult);
         if (bindingResult.hasErrors()) {
             List<String> errorMessages = ErrorUtils.getErrorMessages(bindingResult);
+            logger.error("Validation errors: {}", errorMessages);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("errors", errorMessages));
         }
+
         return ResponseEntity.ok(authenticationService.register(request));
     }
 

@@ -1,11 +1,7 @@
 package com.example.trustex.config;
 
-
+import com.example.trustex.dao.UserRepository;
 import com.example.trustex.entity.User;
-import com.example.trustex.entity.UserType;
-import com.example.trustex.security.JwtAccessDeniedHandler;
-import com.example.trustex.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -25,12 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
 
     private final UserService userService;
 
-    private static final Logger logger = LogManager.getLogger(ApplicationConfig.class);
+    private static final Logger logger= (Logger) LogManager.getLogger(ApplicationConfig.class);
+
     @Bean
     public UserDetailsService userDetailsService(){
         return usernameWithType -> {
@@ -41,18 +37,18 @@ public class ApplicationConfig {
             String idNumber = parts[0];
             UserType userType = UserType.valueOf(parts[1]);
 
-            List<User> userOptional = userService.getUsersByIdNumberAndType(idNumber, userType);
-
-            if (userOptional==null) {
-                throw new UsernameNotFoundException("User not found with ID: " + idNumber + " and Type: " + userType);
+            if (user == null) {
+                throw new UsernameNotFoundException("User not found");
             }
-
-            User user = userOptional.get(0);
+            List<GrantedAuthority> authoritiesList = new ArrayList<>();
+      //      authoritiesList.add(new SimpleGrantedAuthority(user.getRole().toString()));
+            authoritiesList.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+            logger.info("User role: " + user.getRole());
             return new org.springframework.security.core.userdetails.User(
-                    usernameWithType,
+                    user.getEmail(),
                     user.getPassword(),
-                    List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-            );
+                    authoritiesList);
+
         };
     }
 

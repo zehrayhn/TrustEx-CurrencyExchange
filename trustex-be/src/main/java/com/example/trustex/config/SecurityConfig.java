@@ -8,10 +8,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -34,8 +34,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         logger.info("Configuring SecurityFilterChain");
         http
-                .csrf((csrf) -> csrf.disable())
-                .cors((httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.disable()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors((AbstractHttpConfigurer::disable))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/register", "/auth/login", "/","/auth/verify","/auth/verify-code","/auth/send-verification-code",
                                 "/auth/verify-and-authenticate","/auth/forgot-password","/auth/verify?token=", "/auth/reset-password/**","/auth/reset-password").permitAll()
