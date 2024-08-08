@@ -3,6 +3,7 @@ package com.example.trustex.config;
 import com.example.trustex.security.JwtAccessDeniedHandler;
 import com.example.trustex.security.JwtAuthenticationEntryPoint;
 import com.example.trustex.security.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -26,12 +28,6 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private static final Logger logger = LogManager.getLogger(SecurityConfig.class);
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, JwtAuthenticationEntryPoint handler, AuthenticationProvider authenticationProvider, JwtAccessDeniedHandler jwtAccessDeniedHandler) {
-        this.jwtAuthFilter = jwtAuthFilter;
-        this.jwtAuthenticationEntryPoint = handler;
-        this.authenticationProvider = authenticationProvider;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-    }
 
 
     @Bean
@@ -41,7 +37,12 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.disable())
                 .cors((httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.disable()))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/register", "/auth/login", "/","/auth/verify").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login", "/","/auth/verify","/auth/verify-code","/auth/send-verification-code",
+                                "/auth/verify-and-authenticate","/auth/forgot-password","/auth/verify?token=", "/auth/reset-password/**","/auth/reset-password").permitAll()
+                        .requestMatchers("/profile").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/trustex/supports").hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.GET,"/trustex/support").hasAuthority("ROLE_USER")
+
                         .anyRequest().authenticated()
 
                 )

@@ -4,11 +4,12 @@ import com.example.trustex.entity.UserType;
 import lombok.Data;
 
 @Data
-public class AuthenticateRequestDto {
-    private UserType userType;
+public class VerifyCodeRequestDto {
+
     private String idNumber;
-    private String corporateCustomerNumber;
+    private String verificationCode;
     private String password;
+    private UserType userType;
 
 
 }

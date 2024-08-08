@@ -1,7 +1,11 @@
 package com.example.trustex.config;
 
-import com.example.trustex.dao.UserRepository;
+
 import com.example.trustex.entity.User;
+import com.example.trustex.entity.UserType;
+import com.example.trustex.security.JwtAccessDeniedHandler;
+import com.example.trustex.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -21,31 +25,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 public class ApplicationConfig {
-    private final UserRepository repository;
-    private static final Logger logger= (Logger) LogManager.getLogger(ApplicationConfig.class);
 
-    public ApplicationConfig(UserRepository repository) {
-        this.repository = repository;
-    }
+    private final UserService userService;
 
+    private static final Logger logger = LogManager.getLogger(ApplicationConfig.class);
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> {
-            User user = repository.findByEmail(username);
-
-            if (user == null) {
-                throw new UsernameNotFoundException("User not found");
+        return usernameWithType -> {
+            String[] parts = usernameWithType.split("_");
+            if (parts.length < 2) {
+                throw new UsernameNotFoundException("Geçersiz kullanıcı adı veya kullanıcı türü.");
             }
-            List<GrantedAuthority> authoritiesList = new ArrayList<>();
-      //      authoritiesList.add(new SimpleGrantedAuthority(user.getRole().toString()));
-            authoritiesList.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
-            logger.info("User role: " + user.getRole());
-            return new org.springframework.security.core.userdetails.User(
-                    user.getEmail(),
-                    user.getPassword(),
-                    authoritiesList);
+            String idNumber = parts[0];
+            UserType userType = UserType.valueOf(parts[1]);
 
+            List<User> userOptional = userService.getUsersByIdNumberAndType(idNumber, userType);
+
+            if (userOptional==null) {
+                throw new UsernameNotFoundException("User not found with ID: " + idNumber + " and Type: " + userType);
+            }
+
+            User user = userOptional.get(0);
+            return new org.springframework.security.core.userdetails.User(
+                    usernameWithType,
+                    user.getPassword(),
+                    List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+            );
         };
     }
 
