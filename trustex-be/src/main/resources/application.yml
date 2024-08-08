@@ -1,6 +1,6 @@
 spring:
   application:
-    name: trustex
+    name: forexDB
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=TrustEXDB;trustServerCertificate=true
     username: sa

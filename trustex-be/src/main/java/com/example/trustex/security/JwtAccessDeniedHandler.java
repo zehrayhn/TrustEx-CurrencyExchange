@@ -18,7 +18,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         logger.error("Access Denied: %s " , accessDeniedException.getMessage());
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().write("Access Denied: Bu kaynağa erişmek için izniniz yok");
+        response.getWriter().write("Bu kaynağa erişmek için izniniz yok");
 
     }
 }

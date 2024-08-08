@@ -1,12 +1,16 @@
 package com.example.trustex.service.impl;
 
+import com.example.trustex.exception.BusinessException;
 import com.example.trustex.service.MailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +36,19 @@ public class MailServiceImpl implements MailService {
             helper.setText(text);
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(HttpStatus.BAD_REQUEST, Arrays.asList("E-mail gönderilemedi"));
         }
 
     }
+
+    @Override
+    public void sendVerificationCodeEmail(String to, String code) {
+        String subject = "Giriş Doğrulama Kodu";
+        String text = "Merhaba,\n\nGiriş işleminizi doğrulamak için aşağıdaki kodu girin:\n\n" + code;
+
+        sendEmail(to, subject, text);
+    }
+
+
+
 }

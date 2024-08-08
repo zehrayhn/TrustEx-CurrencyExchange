@@ -1,6 +1,5 @@
 package com.example.trustex.service;
 
-import org.springframework.stereotype.Service;
 
 
 public interface MailService {
@@ -8,5 +7,7 @@ public interface MailService {
 
 
     void sendEmail(String to, String subject, String text);
+
+    void sendVerificationCodeEmail(String to, String code);
 
 }

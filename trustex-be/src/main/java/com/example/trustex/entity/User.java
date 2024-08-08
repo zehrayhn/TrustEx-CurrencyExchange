@@ -10,11 +10,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name="users",uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"idNumber", "userType"})})
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -26,13 +28,13 @@ public class User extends BaseEntity implements UserDetails {
     private String firstname;
     private String lastname;
     private String email;
-    private String idNumber; // TC kimlik numarası
+    private String idNumber;
     private String mobilePhone;
     private String country; //! ???
     private LocalDate dateOfBirth;
     private String password;
+    private String confirmPassword;
     private String corporateCustomerNumber;
-    private String representativeIdNumber; // Şirket yetkilisine ait TC kimlik numarası
     private String commercialRegistrationNumber;
     private String mersisNumber;
     private String companyTitle;
@@ -48,6 +50,26 @@ public class User extends BaseEntity implements UserDetails {
     private boolean verified;
 
     private String verificationToken;
+
+    private String verificationCode;
+    private LocalDateTime verificationCodeExpiry;
+    private String resetPasswordToken;
+    private LocalDateTime resetPasswordTokenExpiration;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SupportRequest> supportRequests;
+
+    public User(Long id, String firstname, String lastname, String email, String mobilePhone, String companyTitle, String corporateCustomerNumber, String idNumber) {
+        this.setId(id);
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.mobilePhone = mobilePhone;
+        this.companyTitle = companyTitle;
+        this.corporateCustomerNumber = corporateCustomerNumber;
+        this.idNumber = idNumber;
+    }
 
     public boolean isVerified() {
         return verified;
@@ -65,7 +87,6 @@ public class User extends BaseEntity implements UserDetails {
     public void setRole(Role role) {
         this.role = role;
     }
-
 
     public String getFirstname() {
         return firstname;
@@ -109,7 +130,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return idNumber + "_" + userType;
     }
 
     @Override
@@ -137,7 +158,5 @@ public class User extends BaseEntity implements UserDetails {
         this.verificationToken = verificationToken;
     }
 
-    public String getVerificationToken() {
-        return verificationToken;
-    }
+
 }

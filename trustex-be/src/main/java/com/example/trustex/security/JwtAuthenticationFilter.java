@@ -19,9 +19,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
     private final UserDetailsService userDetailsService;
-   // private final HandlerExceptionResolver handlerExceptionResolver;
     private static final Logger logger= (Logger) LogManager.getLogger(JwtAuthenticationFilter.class);
     public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
@@ -39,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-//        try {
 
             jwt = autHeader.substring(7);
             userEmail = jwtService.extractUsername(jwt);
@@ -68,13 +65,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         }
-//        catch (ExpiredJwtException expiredJwtException) {
-//            SecurityContextHolder.clearContext(); // Token süresi dolmuşsa oturumu temizle
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.getWriter().write("JWT token expired.");
-//
-//            // handlerExceptionResolver.resolveException(request, response, null, expiredJwtException);
-//
-//        }
+
     }
 

@@ -1,7 +1,8 @@
 package com.example.trustex.dto;
 
+import com.example.trustex.entity.UserType;
 import lombok.Data;
-
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDate;
 
@@ -18,5 +19,14 @@ public class RegisterRequestDto {
     private String idNumber;
     private String country;
     private LocalDate dateOfBirth;
+
+    @NotNull
+    private UserType userType;
+    private String corporateCustomerNumber;
+    private String representativeIdNumber; // Şirket yetkilisine ait TC kimlik numarası
+    private String commercialRegistrationNumber;
+    private String mersisNumber;
+    private String companyTitle;
+
 
 }
