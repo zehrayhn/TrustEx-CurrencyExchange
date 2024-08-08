@@ -1,9 +1,7 @@
 package com.example.trustex.controller;
 
 import com.example.trustex.config.SecurityConfig;
-import com.example.trustex.dto.AuthenticateRequestDto;
-import com.example.trustex.dto.AuthenticationResponseDto;
-import com.example.trustex.dto.RegisterRequestDto;
+import com.example.trustex.dto.*;
 import com.example.trustex.entity.User;
 import com.example.trustex.exception.InvalidCredentialsException;
 import com.example.trustex.service.AuthenticationService;
@@ -17,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

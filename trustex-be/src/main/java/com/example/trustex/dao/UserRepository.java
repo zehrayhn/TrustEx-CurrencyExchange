@@ -34,7 +34,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     List<User> findIndividualUsersByIdNumber(String idNumber);
 
-    List<User> findByIdNumberAndUserType(String idNumber, UserType userType);
+  //  List<User> findByIdNumberAndUserType(String idNumber, UserType userType);
+  @Query("SELECT u FROM User u WHERE u.idNumber = :idNumber AND u.userType = :userType")
+  List<User> findByIdNumberAndUserType(@Param("idNumber") String idNumber, @Param("userType") UserType userType);
+
 
 
 }

@@ -1,10 +1,10 @@
 spring:
   application:
-    name: trustex
+    name: forexDB
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=TrustEXDB;trustServerCertificate=true
-    username: sa
-    password: admin
+    url: jdbc:sqlserver://localhost:1433;databaseName=forexDB;trustServerCertificate=true
+    username: zehra
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update

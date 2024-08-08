@@ -1,19 +1,20 @@
 package com.example.trustex.service.impl;
 
 import com.example.trustex.dao.UserRepository;
-import com.example.trustex.dto.AuthenticateRequestDto;
-import com.example.trustex.dto.AuthenticationResponseDto;
-import com.example.trustex.dto.RegisterRequestDto;
+import com.example.trustex.dto.*;
 import com.example.trustex.entity.Role;
 import com.example.trustex.entity.User;
 import com.example.trustex.entity.UserType;
-import com.example.trustex.exception.AuthenticationFailedException;
-import com.example.trustex.exception.InvalidCredentialsException;
-import com.example.trustex.exception.UserAlreadyExistsException;
+import com.example.trustex.exception.*;
 import com.example.trustex.security.JwtService;
 import com.example.trustex.service.AuthenticationService;
 import com.example.trustex.service.MailService;
+import com.example.trustex.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 @Service
 @RequiredArgsConstructor
@@ -154,7 +160,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String verificationCode = generateVerificationCode();
         user.setVerificationCode(verificationCode);
-        user.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(200));
+        user.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(20));
         userRepository.save(user);
 
         mailService.sendVerificationCodeEmail(user.getEmail(), verificationCode);
@@ -162,7 +168,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new AuthenticationResponseDto("Doğrulama kodu e-posta adresinize iletildi.");
     }
 
-    private AuthenticationResponseDto sendVerificationCodeCorporate(AuthenticateRequestDto request) {
+    @Async
+    protected AuthenticationResponseDto sendVerificationCodeCorporate(AuthenticateRequestDto request) {
         UserType userType = request.getUserType();
         if (request.getCorporateCustomerNumber() == null || request.getCorporateCustomerNumber().isEmpty() || request.getPassword() == null || request.getIdNumber().isEmpty()) {
             throw new ValidationException("Tüm alanlar doldurulmalıdır.");
@@ -186,7 +193,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String verificationCode = generateVerificationCode();
         user.setVerificationCode(verificationCode);
-        user.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(200));
+        user.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(20));
         userRepository.save(user);
 
         mailService.sendVerificationCodeEmail(user.getEmail(), verificationCode);
