@@ -1,0 +1,28 @@
+/* ConverterCss.css */
+
+/* Konumlandırma ve boyutlandırma için özel sınıflar */
+.custom-container {
+  position: absolute; /* Veya relative */
+  top: 110px; /* Yukarıdan mesafe */
+  left: 50%; /* Soldan mesafe */
+  transform: translateX(-50%); /* Merkezi hizalamak için */
+  width: 1000px; /* Genişlik */
+  height: 400px; /* Yükseklik */
+  background: white; /* Arka plan rengi */
+  border-radius: 8px; /* Köşe yuvarlama */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Gölge efekti */
+  padding: 20px; /* İç boşluk */
+  z-index: 10; 
+}
+
+/* styles.css */
+.custom-typography {
+    position: absolute;
+    top: 320px;
+    left: 750px;
+    transform: translateX(-50%);
+    color: #db0000;
+    z-index: 10;
+    width: 1400px;
+    font-size: 0.3rem; 
+  }

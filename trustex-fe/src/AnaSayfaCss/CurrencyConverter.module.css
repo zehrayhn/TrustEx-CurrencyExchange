@@ -1,0 +1,29 @@
+.custom-right {
+  position: absolute;
+  margin-top: 20px; /* Yukarıdan 20px boşluk */
+  margin-left: 100px; /* Soldan 100px boşluk */
+  transform: translateX(200px); /* Sağdan 200px kaydır */
+}
+
+/* İç elemanlar için konumlandırma */
+.currency-converter-container input,
+.currency-converter-container button,
+.currency-converter-container .result {
+  position: relative; /* Konumlandırmayı başlatır */
+}
+
+/* Input konumlandırması */
+.currency-converter-container input {
+  position: relative;
+}
+
+/* Button konumlandırması */
+.currency-converter-container button {
+  position: relative;
+}
+
+/* Result konumlandırması */
+.currency-converter-container .result {
+  position: relative;
+}
+

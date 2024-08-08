@@ -1,0 +1,23 @@
+
+.table-data-birey {
+    position: absolute; /* Tabloyu belirli bir konumda tutar */
+    top: 175px; /* Yukarıdan 20px boşluk */
+    left: 200px; /* Soldan 20px boşluk */
+  }
+  
+  .table-data-birey {
+    width: 40%;
+  }
+  .table-data-birey th, .table-data-birey td {
+    padding: 10px; /* Hücre içi boşluk */
+  }
+  
+  .table-data-birey tr {
+    line-height: 0.1em; /* Satır yüksekliği */
+  }
+  
+  /* Satır yüksekliğini manuel olarak ayarlama */
+  .table-data.-birey tr.custom-height {
+    height: 50px; /* Satır yüksekliği */
+  }
+  
