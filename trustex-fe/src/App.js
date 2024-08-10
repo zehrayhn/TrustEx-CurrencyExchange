@@ -25,6 +25,8 @@ import backgroundconverterImage from './images/backgroundconverter.jpg';
 import Auth from './Auth/Auth';
 import ForgotPassword from './Auth/ForgotPassword';
 import ResetPassword from './Auth/ResetPassword';
+import AssetsPageScreen from './AssetsPage/AssetsPageScreen';
+import DepositWithdrawPage from './DepositWithdrawTransferPage/DepositWithdrawPage';
 
 const Background = () => {
   const location = useLocation();
@@ -168,6 +170,16 @@ function App() {
         <Route path="/sifre-merkezi" element={
           <>
            
+          </>
+        } />
+         <Route path="/assets-screen" element={
+          <>
+           <AssetsPageScreen />
+          </>
+        } />
+          <Route path="/balance-screen" element={
+          <>
+           <DepositWithdrawPage />
           </>
         } />
       </Routes>
