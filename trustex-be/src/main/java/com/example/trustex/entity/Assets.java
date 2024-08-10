@@ -7,9 +7,9 @@ import lombok.*;
 @Table(name="assets")
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Assets {
 
     @Id
@@ -22,8 +22,8 @@ public class Assets {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "currency_code")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "currency_code", nullable = false)
     private Currency currency;
 
     @Column(nullable = false)
@@ -32,3 +32,4 @@ public class Assets {
     @Column(nullable = false)
     private Double avgCost;
 }
+

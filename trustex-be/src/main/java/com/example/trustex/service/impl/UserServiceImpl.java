@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -65,6 +66,16 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getUsersByIdNumberAndType(String idNumber, UserType userType) {
         return userRepository.findByIdNumberAndUserType(idNumber, userType);
+    }
+
+    @Override
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
 
