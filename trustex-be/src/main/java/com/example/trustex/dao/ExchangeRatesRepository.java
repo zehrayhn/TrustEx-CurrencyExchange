@@ -28,4 +28,12 @@ public interface ExchangeRatesRepository extends JpaRepository<ExchangeRates, Lo
 
     @Query(value = "SELECT TOP 1 * FROM exchange_rate er WHERE er.currency_code = :currencyCode ORDER BY er.time_stamp DESC", nativeQuery = true)
     Optional<ExchangeRates> findNewestExchangeRateByCurrencyCode(String currencyCode);
+
+    @Query("SELECT e FROM ExchangeRates e WHERE e.currency.currencyCode IN :currencyCodes " +
+            "AND e.timeStamp = (SELECT MAX(e2.timeStamp) FROM ExchangeRates e2 WHERE e2.currency = e.currency)")
+    List<ExchangeRates> findExchangeRatesForSelectedCurrencies(@Param("currencyCodes") List<String> currencyCodes);
+
+
+
+
 }

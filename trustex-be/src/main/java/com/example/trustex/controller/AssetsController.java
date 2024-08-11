@@ -1,5 +1,6 @@
 package com.example.trustex.controller;
 
+import com.example.trustex.dto.AssetResponseDto;
 import com.example.trustex.entity.Assets;
 import com.example.trustex.entity.User;
 import com.example.trustex.service.AssetsService;
@@ -32,12 +33,21 @@ public class AssetsController {
         return ResponseEntity.ok(assets);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Assets>> getAssetsByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(assetsService.getAssetsByUserId(userId));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Assets> getAssetById(@PathVariable Long id) {
         Assets asset = assetsService.getAssetById(id);
         return ResponseEntity.ok(asset);
     }
+    @GetMapping("/user/{userId}/{currencyCode}")
+    public ResponseEntity<AssetResponseDto> getAssetByUserAndCurrencyCode (@PathVariable Long userId, @PathVariable String currencyCode) {
 
+        return ResponseEntity.ok(assetsService.getAssetByUserIdAndCurrencyCode(userId, currencyCode));
+    }
     @PostMapping
     public ResponseEntity<Assets> createAsset(@RequestBody Assets asset) {
         Assets savedAsset = assetsService.saveAsset(asset);

@@ -6,6 +6,7 @@ import com.example.trustex.service.CurrencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,7 +14,9 @@ import java.util.Optional;
 public class CurrencyServiceImpl implements CurrencyService {
 
     private final CurrencyRepository currencyRepository;
-
+    public List<Currency> getAllCurrencies() {
+        return currencyRepository.findAll();
+    }
     @Override
     public Optional<Currency> findById(String currencyCode) {
         return currencyRepository.findById(currencyCode);

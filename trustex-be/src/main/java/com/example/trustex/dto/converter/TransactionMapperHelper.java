@@ -32,7 +32,6 @@ public class TransactionMapperHelper {
                 .currencyRate(exchangeRate)
                 .commissionAmount(commission)
                 .foreignExchangeTax(foreignExchangeTax)
-                .baseCurrency(baseCurrency)
                 .targetCurrency(targetCurrency)
                 .total(transactionRequestDto.getAmount() * exchangeRate)
                 .build();
@@ -43,7 +42,6 @@ public class TransactionMapperHelper {
                 .transactionId(transaction.getTransactionId())
                 .amount(transaction.getAmount())
                 .total(transaction.getTotal())
-                .baseCurrencyCode(transaction.getBaseCurrency().getCurrencyCode())
                 .targetCurrencyCode(transaction.getTargetCurrency().getCurrencyCode())
                 .currencyRate(transaction.getCurrencyRate())
                 .transactionDate(transaction.getTransactionDate().toString())

@@ -29,31 +29,31 @@ public class TransactionServiceImpl implements TransactionService {
 
     public TransactionResponseDto saveTransaction(TransactionRequestDto transactionRequest) {
 
-        if(transactionRequest.getAmount() <= 0 )
-            throw new AmountLowerOrEqualZeroException("Amount must be greater than 0");
+        if (transactionRequest.getAmount() > 0){
 
         User user = userRepository.findById(transactionRequest.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(transactionRequest.getUserId().toString()));//DEĞİŞTİR
+                .orElseThrow(() -> new UserNotFoundException(transactionRequest.getUserId().toString()));
 
-        Assets baseAsset = user.getAssets().stream()
-                .filter(asset -> transactionRequest.getBaseCurrencyCode().equals(asset.getCurrency().getCurrencyCode()))
+        Assets tryAsset = user.getAssets().stream()
+                .filter(asset -> "TRY".equals(asset.getCurrency().getCurrencyCode()))
                 .findFirst()
-                .orElseGet(() -> createAssetForUser(user, transactionRequest.getTargetCurrencyCode()));
+                .orElseGet(() -> createAssetForUser(user, "TRY"));
 
         Assets targetAsset = user.getAssets().stream()
                 .filter(asset -> transactionRequest.getTargetCurrencyCode().equals(asset.getCurrency().getCurrencyCode()))
                 .findFirst()
                 .orElseGet(() -> createAssetForUser(user, transactionRequest.getTargetCurrencyCode()));
 
-        ExchangeRates baseExchangeRates = exchangeRatesRepository.findNewestExchangeRateByCurrencyCode(transactionRequest.getBaseCurrencyCode())
-                .orElseThrow(() -> new ExchangeRateNotFoundException("Exchange rate not found for currency: " + transactionRequest.getBaseCurrencyCode()));
-
-        ExchangeRates targetExchangeRates = exchangeRatesRepository.findNewestExchangeRateByCurrencyCode(transactionRequest.getTargetCurrencyCode())
+        ExchangeRates exchangeRate = exchangeRatesRepository.findNewestExchangeRateByCurrencyCode(transactionRequest.getTargetCurrencyCode())
                 .orElseThrow(() -> new ExchangeRateNotFoundException("Exchange rate not found for currency: " + transactionRequest.getTargetCurrencyCode()));
 
-        Transaction transaction = handleTransaction(transactionRequest, user, baseAsset, targetAsset, baseExchangeRates , targetExchangeRates);
+        Transaction transaction = handleTransaction(transactionRequest, user, tryAsset, targetAsset, exchangeRate);
 
-        return TransactionMapperHelper.transactionToTransactionResponseDto(transactionRepository.save(transaction));
+        return TransactionMapperHelper.transactionToTransactionResponseDto(transactionRepository.save(transaction));}
+
+        else {
+            throw new AmountLowerOrEqualZeroException("Amount must be greater than 0");
+        }
     }
 
     public List<TransactionResponseDto> getAllTransactions() {
@@ -94,41 +94,39 @@ public class TransactionServiceImpl implements TransactionService {
         return newTransactionAsset;
     }
 
-    private Transaction handleTransaction(TransactionRequestDto transactionRequest, User user, Assets baseAsset, Assets targetAsset, ExchangeRates baseExchangeRates , ExchangeRates targetExchangeRates) {
+    private Transaction handleTransaction(TransactionRequestDto transactionRequest, User user, Assets tryAsset, Assets targetAsset, ExchangeRates targetExchangeRates) {
 
         boolean isBuyTransaction = transactionRequest.getTransactionType().toString().equals("BUY");
-        double baseRate =  1/(isBuyTransaction ? baseExchangeRates.getBuyRate() : baseExchangeRates.getSellRate());
-        double targetRate =  1/(isBuyTransaction ? targetExchangeRates.getSellRate() : targetExchangeRates.getBuyRate());
-        double exchangeRate = baseRate/targetRate;
+        //Exchange rate al. Daha sonrasinda base TRY oldugu icin 1/exchangeRate yapilir.
+        double exchangeRate = 1 / (isBuyTransaction ?  targetExchangeRates.getBuyRate() : targetExchangeRates.getSellRate());
 
         double transactionAmount = transactionRequest.getAmount();
         double cost = transactionAmount * exchangeRate;
-        double commission = cost * 0.01;
+        double commission = cost * getCommissionRate(transactionAmount);
         double foreignExchangeTax = cost * 0.002;
-
+        double total = 0;
         if (isBuyTransaction) {
-            double totalCost = cost - (foreignExchangeTax + commission) ;
-            if (baseAsset.getAmount() < transactionAmount){
+             total = cost + foreignExchangeTax + commission;
+            if (tryAsset.getAmount() < total) {
                 throw new BalanceNotEnoughException(transactionRequest.getUserId());
             } else {
-                baseAsset.setAmount(baseAsset.getAmount() - transactionAmount);
-                targetAsset.setAvgCost(calculateNewAvgCost(targetAsset.getAmount(), targetAsset.getAvgCost(), transactionAmount, targetRate));
-                targetAsset.setAmount(targetAsset.getAmount() + totalCost);
+                tryAsset.setAmount(tryAsset.getAmount() - total);
+                targetAsset.setAvgCost(calculateNewAvgCost(targetAsset.getAmount(), targetAsset.getAvgCost(), transactionAmount, exchangeRate));
+                targetAsset.setAmount(targetAsset.getAmount() + transactionAmount);
             }
-        }
-        else
-        {
-            double totalGain = cost - commission;
+        } else {
+             total = cost - commission;
             if (targetAsset.getAmount() >= transactionAmount) {
-                baseAsset.setAmount(baseAsset.getAmount() + totalGain);
+                tryAsset.setAmount(tryAsset.getAmount() + total);
                 targetAsset.setAmount(targetAsset.getAmount() - transactionAmount);
+                foreignExchangeTax = 0.0;
             } else {
                 throw new BalanceNotEnoughException(transactionRequest.getUserId());
             }
         }
-        Transaction transaction = createTransaction(transactionRequest, user,baseAsset.getCurrency() , targetAsset.getCurrency(), exchangeRate ,commission, foreignExchangeTax);
-        assetsRepository.save(baseAsset);//DIKKAT DIKKAT Asset servisine update olarak baglanacak .
-        assetsRepository.save(targetAsset);//DIKKAT DIKKAT Asset servisine update olarak baglanacak .
+        Transaction transaction = createTransaction(transactionRequest, user, targetAsset.getCurrency(), exchangeRate,total, commission, foreignExchangeTax);
+        assetsRepository.save(tryAsset);
+        assetsRepository.save(targetAsset);
         return transaction;
     }
 
@@ -136,7 +134,7 @@ public class TransactionServiceImpl implements TransactionService {
         return ((oldAmount * oldAvgCost) + (newAmount * newCost)) / (oldAmount + newAmount);
     }
 
-    private Transaction createTransaction(TransactionRequestDto transactionRequest, User user, Currency baseCurrency,Currency targetCurrency, double exchangeRate,Double commission,Double foreignExchangeTax) {
+    private Transaction createTransaction(TransactionRequestDto transactionRequest, User user, Currency targetCurrency, double exchangeRate, Double total,Double commission, Double foreignExchangeTax) {
         return Transaction.builder()
                 .amount(transactionRequest.getAmount())
                 .transactionDate(LocalDateTime.now())
@@ -145,10 +143,31 @@ public class TransactionServiceImpl implements TransactionService {
                 .currencyRate(exchangeRate)
                 .commissionAmount(commission)
                 .foreignExchangeTax(foreignExchangeTax)
-                .baseCurrency(baseCurrency)
                 .targetCurrency(targetCurrency)
-                .total((transactionRequest.getAmount() * exchangeRate) -(commission + foreignExchangeTax))
+                .total(total)///Degistirilefcek
                 .build();
+    }
+
+    private Double getCommissionRate(Double amount) {
+        if (amount >= 0 && amount <= 2000) {
+            return 0.0020; // %0.20
+        } else if (amount > 2000 && amount <= 10000) {
+            return 0.0019; // %0.19
+        } else if (amount > 10000 && amount <= 25000) {
+            return 0.0018; // %0.18
+        } else if (amount > 25000 && amount <= 100000) {
+            return 0.0016; // %0.16
+        } else if (amount > 100000 && amount <= 250000) {
+            return 0.0012; // %0.12
+        } else if (amount > 250000 && amount <= 1000000) {
+            return 0.0010; // %0.10
+        } else if (amount > 1000000 && amount <= 2000000) {
+            return 0.0009; // %0.09
+        } else if (amount > 2000000) {
+            return 0.0008; // %0.08
+        } else {
+            return 0.0; // Return 0 if the amount is negative or doesn't fall into any range
+        }
     }
 
 }

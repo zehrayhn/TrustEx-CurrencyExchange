@@ -2,6 +2,7 @@ package com.example.trustex.service.impl;
 
 import com.example.trustex.dao.AssetsRepository;
 import com.example.trustex.dao.CurrencyRepository;
+import com.example.trustex.dto.AssetResponseDto;
 import com.example.trustex.entity.Assets;
 import com.example.trustex.entity.Currency;
 import com.example.trustex.entity.User;
@@ -33,6 +34,11 @@ public class AssetsServiceImpl implements AssetsService {
     }
 
     @Override
+    public List<Assets> getAssetsByUserId(Long userId) {
+        return assetsRepository.findByUserId(userId);
+    }
+
+    @Override
     public Assets getAssetById(Long id) {
         return assetsRepository.findById(id)
                 .orElseThrow(() -> new AssetNotFoundException("Bu ID ile varlık bulunamadı: " + id));
@@ -42,6 +48,20 @@ public class AssetsServiceImpl implements AssetsService {
     public Assets getAssetByUserAndCurrencyCode(User user, String currencyCode) {
         return assetsRepository.findByUserAndCurrencyCurrencyCode(user, currencyCode)
                 .orElseThrow(() -> new AssetNotFoundException("Bu kullanıcı ve döviz koduna göre varlık bulunamadı: " + currencyCode));
+    }
+
+    @Override
+    public AssetResponseDto getAssetByUserIdAndCurrencyCode(Long userId, String currencyCode) {
+       Assets asset = assetsRepository.findByUserAndCurrencyCode(userId, currencyCode)
+                .orElseThrow(() -> new AssetNotFoundException("Bu kullanıcı ve döviz koduna göre varlık bulunamadı: " + currencyCode));
+
+        return AssetResponseDto.builder()
+                .assetName(asset.getAssetName())
+                .userId(asset.getUser().getId())
+                .currencyCode(asset.getCurrency().getCurrencyCode())
+                .amount(asset.getAmount())
+                .avgCost(asset.getAvgCost())
+                .build();
     }
 
     @Override

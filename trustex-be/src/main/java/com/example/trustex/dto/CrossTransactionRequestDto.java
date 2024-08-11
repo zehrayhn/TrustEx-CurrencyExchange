@@ -1,15 +1,18 @@
 package com.example.trustex.dto;
 
 import com.example.trustex.entity.TransactionType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
+@RequiredArgsConstructor
 @Getter
 @Setter
-public class TransactionRequestDto {
+@AllArgsConstructor
+public class CrossTransactionRequestDto {
+
     private Long userId;
     private String targetCurrencyCode;
-    private TransactionType transactionType;
+    private String baseCurrencyCode;
     private Double amount;
 
 }

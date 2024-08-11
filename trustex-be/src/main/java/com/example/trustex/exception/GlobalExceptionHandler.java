@@ -51,8 +51,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-
-
     @ExceptionHandler(BalanceNotEnoughException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleBalanceNotEnoughException(BalanceNotEnoughException ex) {

@@ -1,5 +1,6 @@
 package com.example.trustex.service;
 
+import com.example.trustex.dto.AssetResponseDto;
 import com.example.trustex.entity.Assets;
 import com.example.trustex.entity.Currency;
 import com.example.trustex.entity.User;
@@ -12,10 +13,12 @@ public interface AssetsService {
     List<Assets> getAllAssets();
 
     List<Assets> getAssetsByUser(User user);
+    List<Assets> getAssetsByUserId(Long userId);
 
     Assets getAssetById(Long assetId);
 
     Assets getAssetByUserAndCurrencyCode(User user, String currencyCode);
+    AssetResponseDto getAssetByUserIdAndCurrencyCode(Long userId, String currencyCode);
 
     Assets saveAsset(Assets asset);
 

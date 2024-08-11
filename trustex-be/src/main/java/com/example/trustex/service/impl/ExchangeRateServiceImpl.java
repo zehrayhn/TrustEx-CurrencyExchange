@@ -5,17 +5,18 @@ import com.example.trustex.dao.ExchangeRatesRepository;
 import com.example.trustex.dto.ExchangeRateResponseDto;
 import com.example.trustex.entity.Currency;
 import com.example.trustex.entity.ExchangeRates;
+import com.example.trustex.exception.CurrencyNotFoundException;
 import com.example.trustex.service.ExchangeRateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -73,14 +74,35 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         List<ExchangeRateResponseDto> exchangeRateCurrencies = new ArrayList<>();
         //Getting the exchange rates from the database and setting them to the response DTO
         for (ExchangeRates exchangeRate : exchangeRateRepository.findByOrderLastDesc()) {
-            ExchangeRateResponseDto exchangeRateCurrency = new ExchangeRateResponseDto();
-            exchangeRateCurrency.setCurrencyCode(exchangeRate.getCurrency().getCurrencyCode());
-            exchangeRateCurrency.setCurrencyLabelTR(exchangeRate.getCurrency().getCurrencyLabelTR());
-            exchangeRateCurrency.setBuyRate(exchangeRate.getBuyRate());
-            exchangeRateCurrency.setSellRate(exchangeRate.getSellRate());
-            exchangeRateCurrency.setTimeStamp(exchangeRate.getTimeStamp());
-            exchangeRateCurrencies.add(exchangeRateCurrency);
+            exchangeRateCurrencies.add(toDto(exchangeRate));
         }
         return exchangeRateCurrencies;
+    }
+
+    public ExchangeRateResponseDto getExchangeRateByCurrencyCode(String currencyCode) {
+        ExchangeRates exchangeRate =  exchangeRateRepository.findNewestExchangeRateByCurrencyCode(currencyCode)
+                .orElseThrow(() -> new CurrencyNotFoundException("Exchange rate not found for currency: " + currencyCode));
+        return toDto(exchangeRate);
+    }
+
+    public List<ExchangeRateResponseDto> getMainCurrencies() {
+        List<String> currencyCodes = Arrays.asList("USD", "EUR", "GBP", "CHF", "CAD", "RUB", "AED", "AUD", "DKK", "SEK", "NOK", "CNY", "JPY", "KWD", "INR");
+        List<ExchangeRateResponseDto> exchangeRateCurrencies = new ArrayList<>();
+        for (ExchangeRates exchangeRate : exchangeRateRepository.findExchangeRatesForSelectedCurrencies(currencyCodes)) {
+            exchangeRateCurrencies.add(toDto(exchangeRate));
+        }
+        return exchangeRateCurrencies ;
+
+    }
+
+    private ExchangeRateResponseDto toDto(ExchangeRates exchangeRate){
+        ExchangeRateResponseDto exchangeRateCurrency = new ExchangeRateResponseDto();
+        exchangeRateCurrency.setCurrencyCode(exchangeRate.getCurrency().getCurrencyCode());
+        exchangeRateCurrency.setCurrencyLabelTR(exchangeRate.getCurrency().getCurrencyLabelTR());
+        exchangeRateCurrency.setBuyRate(exchangeRate.getBuyRate());
+        exchangeRateCurrency.setSellRate(exchangeRate.getSellRate());
+        exchangeRateCurrency.setTimeStamp(exchangeRate.getTimeStamp());
+
+        return exchangeRateCurrency;
     }
 }

@@ -6,28 +6,29 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "crossTransactions")
 @Getter
 @Setter
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Transaction {
+public class CrossTransaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transactionId;
+    private Long crossTransactionId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "base_currency_code")
+    private Currency baseCurrency;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "target_currency_code")
     private Currency targetCurrency;
-
-    @Enumerated(EnumType.STRING)
-    private TransactionType transactionType;
 
     @Column(nullable = false)
     private double amount;
@@ -43,5 +44,4 @@ public class Transaction {
 
     @Column(nullable = false)
     private LocalDateTime transactionDate;
-
 }
