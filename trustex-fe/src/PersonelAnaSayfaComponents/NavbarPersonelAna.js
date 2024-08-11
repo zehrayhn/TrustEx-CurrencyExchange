@@ -12,7 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/logo.png';
 
-function Navbar() {
+function NavbarPersonelAna() {
   const [openNavColor, setOpenNavColor] = useState(false); 
   const navigate = useNavigate();
 
@@ -23,11 +23,11 @@ function Navbar() {
   const handleBMOLClick = () => {
     navigate('/bireysel-musteri-ol');
   };
+
+
+
   const handleLogoClick = () => {
     navigate('/'); 
-  };
-  const handlesifre2Click = () => {
-    navigate('/sifre-merkezi'); 
   };
  
   return (
@@ -36,7 +36,7 @@ function Navbar() {
         <img 
           src={logo} 
           alt="Logo" 
-          style={{ height: '50px', marginLeft: '575px', cursor: 'pointer' }} 
+          style={{ height: '50px', marginLeft: '0px', cursor: 'pointer' }} 
           onClick={handleLogoClick} 
         />
         <MDBNavbarToggler
@@ -50,19 +50,14 @@ function Navbar() {
         </MDBNavbarToggler>
         <MDBCollapse open={openNavColor} navbar id='navbarColor01'>
           <MDBNavbarNav className='me-auto mb-2 mb-lg-0'>
-            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '750px' }}>
+            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '200px' }}>
               <MDBNavbarLink onClick={handlegirisClick} style={{ color: 'white' }}>
-                Giriş Yap/Şifre Oluştur
+                Ana Sayfa
               </MDBNavbarLink>
             </MDBNavbarItem>
-            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '950px'}}>
+            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '1800px'}}>
               <MDBNavbarLink onClick={handleBMOLClick} style={{ color: 'white' }}>
-                Bireysel Müşteri Ol
-              </MDBNavbarLink>
-            </MDBNavbarItem>
-            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '1125px' }}>
-              <MDBNavbarLink  onClick={handlesifre2Click} style={{ color: 'white' }}>
-                Şifre Merkezi
+                Profil
               </MDBNavbarLink>
             </MDBNavbarItem>
           </MDBNavbarNav>
@@ -72,4 +67,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default NavbarPersonelAna;

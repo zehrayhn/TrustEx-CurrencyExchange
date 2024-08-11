@@ -12,7 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/logo.png';
 
-function Navbar() {
+function NavbarSifreMerkezi() {
   const [openNavColor, setOpenNavColor] = useState(false); 
   const navigate = useNavigate();
 
@@ -72,4 +72,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default NavbarSifreMerkezi;

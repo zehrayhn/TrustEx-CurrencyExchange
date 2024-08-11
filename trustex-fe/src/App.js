@@ -8,13 +8,8 @@ import CurrencyConverter from './AnaSayfaComponents/CurrencyConverter';
 import NavbarBirey from './GirisYapBireyComponents/NavbarBirey';
 import MainPageBirey from './GirisYapBireyComponents/MainPageBirey';
 import DataTableBirey from './GirisYapBireyComponents/DataTableBirey';
-import NavbarKurum from './GirisYapKurumComponents/NavbarKurum';
-import MainPageKurum from './GirisYapKurumComponents/MainPageKurum';
-import DataTableKurum from './GirisYapKurumComponents/DataTableKurum';
 import MainPageBMOL from './BireyMOL/MainPageBMOL';
 import NavbarBMOL from './BireyMOL/NavbarBMOL';
-import MainPageKMOL from './KurumMOL/MainPageKMOL';
-import NavbarKMOL from './KurumMOL/NavbarKMOL';
 import NavbarHaberveDoviz from './HaberveDovizComponents/NavbarHaberveDoviz';
 import MainPageHaberveDoviz from './HaberveDovizComponents/MainPageHaberveDoviz';
 import DataTableHaberveDoviz from './HaberveDovizComponents/DataTableHaberveDoviz';
@@ -22,11 +17,26 @@ import backgroundImage from './images/background.jpg';
 import background3Image from './images/background3.jpg';
 import background2Image from './images/background2.png';
 import backgroundconverterImage from './images/backgroundconverter.jpg';
-import Auth from './Auth/Auth';
-import ForgotPassword from './Auth/ForgotPassword';
-import ResetPassword from './Auth/ResetPassword';
-import AssetsPageScreen from './AssetsPage/AssetsPageScreen';
-import DepositWithdrawPage from './DepositWithdrawTransferPage/DepositWithdrawPage';
+import AydınlatmaMetni from './AydınlatmaMetni/AydınlatmaMetni';
+import NavbarPersonelAna from './PersonelAnaSayfaComponents/NavbarPersonelAna';
+import MainPagePersonelAna from './PersonelAnaSayfaComponents/MainPagePersonelAna';
+import NavbarMüsteriEkle from './MüsteriEkleComponents/NavbarMüsteriEkle';
+import MainPageMüsteriEkle from './MüsteriEkleComponents/MainPageMüsteriEkle';
+import NavbarSifreMerkezi from './SifreMerkeziComponents/NavbarSifreMerkezi';
+import ResetPassword from './SifreMerkeziComponents/ResetPassword';
+import SifremiUnuttum from './SifreMerkeziComponents/SifremiUnuttum';
+import NavbarProfilBirey from './ProfilBireyComponents/NavbarProfilBirey';
+import MainPageProfilBirey from './ProfilBireyComponents/MainPageProfilBirey';
+import NavbarProfilPersonel from './ProfilPersonelComponents/NavbarProfilPersonel';
+import MainPageProfilPersonel from './ProfilPersonelComponents/MainPageProfilPersonel';
+import NavbarDovizAlSat from './DovizAlSatComponents/NavbarDovizAlSat';
+import DovizAlSat from './DovizAlSatComponents/DovizAlSat';
+import BuySell from './AlımSatımComponents/BuySell';
+import Buy from './AlımSatımComponents/Buy';
+import BuyInfo from './AlımSatımComponents/BuyInfo';
+import Sell from './AlımSatımComponents/Sell';
+import CrossCurrency from './CrossCurrencyComponents/CrossCurrency'
+import TransactionList from './GecmisIslemlerComponents/TransactionList';
 
 const Background = () => {
   const location = useLocation();
@@ -138,48 +148,34 @@ function App() {
             </div> 
           </>
         } />
-        <Route path="/deneme1" element={
-          <>
-            <Auth />
-            <ForgotPassword />
-            <ResetPassword />
-            
-          </>
-        } /> 
-        <Route path="/kurumsal-giris" element={
-          <>
-            <NavbarKurum />
-            <MainPageKurum />
-            <div className="table-data-kurum">
-              <DataTableKurum />
-            </div>
-          </>
-        } />
         <Route path="/bireysel-musteri-ol" element={
           <>
             <NavbarBMOL />
             <MainPageBMOL />
           </>
         } />
-        <Route path="/kurumsal-musteri-ol" element={
-          <>
-            <NavbarKMOL />
-            <MainPageKMOL />
-          </>
-        } />
         <Route path="/sifre-merkezi" element={
           <>
-           
+            <NavbarSifreMerkezi />
+            <SifremiUnuttum/>
           </>
         } />
-         <Route path="/assets-screen" element={
+       
+         <Route path="/reset-password" element={
           <>
-           <AssetsPageScreen />
+            <NavbarSifreMerkezi />
+            <ResetPassword/>
           </>
         } />
-          <Route path="/balance-screen" element={
+        <Route path="/bireysel-musteri-ekle" element={
           <>
-           <DepositWithdrawPage />
+            <NavbarMüsteriEkle />
+            <MainPageMüsteriEkle />
+          </>
+        } />
+        <Route path="/aydınlatma-metni" element={
+          <>
+           <AydınlatmaMetni />
           </>
         } />
       </Routes>
