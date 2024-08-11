@@ -30,8 +30,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(icon, name, calories, fat, carbs, protein) {
-  return { icon, name, calories, fat, carbs, protein };
+function createData(icon, name, alış, satış, günlük, saat) {
+  return { icon, name, alış, satış, günlük, saat };
 }
 
 const rows = [
@@ -76,10 +76,10 @@ export default function CustomizedTables() {
                 />
               </StyledTableCell>
               <StyledTableCell align="left">{row.name}</StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell align="right">{row.alış}</StyledTableCell>
+              <StyledTableCell align="right">{row.satış}</StyledTableCell>
+              <StyledTableCell align="right">{row.günlük}</StyledTableCell>
+              <StyledTableCell align="right">{row.saat}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

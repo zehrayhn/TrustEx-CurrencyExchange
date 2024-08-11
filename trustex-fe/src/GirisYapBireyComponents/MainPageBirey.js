@@ -1,20 +1,146 @@
 import React, { useState } from 'react';
-import { Container, Grid, Typography, Button } from '@mui/material';
 import { MDBBtn, MDBInput, MDBCheckbox, MDBBtnGroup } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
+import { Container, Grid, Typography, Button, Snackbar, Alert } from '@mui/material';
+import { Link } from 'react-router-dom';
+export default function MainPageBirey({  }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-export default function MainPageBirey() {
+  const [idNumber, setIdNumber] = useState("");
+
+  const [errorMessages, setErrorMessages] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [showVerificationField, setShowVerificationField] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [setIsIndividual] = useState(true); 
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
-
-  const handleBireyselClick = () => {
+  const handlegirisClick = () => {
     navigate('/bireysel-giris');
   };
 
-  const handleKurumsalClick = () => {
-    navigate('/kurumsal-giris');
+  const handleFetchError = (res) => {
+    return res.json().then((json) => {
+      if (json.errors && Array.isArray(json.errors)) {
+        setErrorMessages(json.errors);
+      } else {
+        setErrorMessages(["Bir hata oluştu"]);
+      }
+    }).catch(() => {
+      setErrorMessages(["Hata mesajı alınamadı."]);
+    });
   };
 
+
+  const sendLoginRequest = () => {
+   // const userType = isIndividual ? "INDIVIDUAL" : "CORPORATE"; 
+   const userType="INDIVIDUAL";
+    fetch("http://localhost:9090/auth/send-verification-code", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        corporateCustomerNumber: "",
+        userType: "INDIVIDUAL",
+        idNumber: idNumber,
+        password: password,
+      }),
+    })
+    .then((res) => {
+      if (!res.ok) {
+        return handleFetchError(res);
+      }
+      return res.json();
+    })
+    .then((result) => {
+      if (result) {
+       // localStorage.setItem("tokenKey", result.token);
+      //  localStorage.setItem("currentUser", result.userId);
+        localStorage.setItem("userName", idNumber);
+        localStorage.setItem("userPassword", password);
+        setShowVerificationField(true);
+        setSuccessMessage("Doğrulama kodu gönderildi.");
+        setSnackbarOpen(true);
+      
+      
+      }
+    })
+    .catch((err) => {
+      setErrorMessages([err.message]);
+
+      setSnackbarOpen(true);
+    });
+  };
+
+ 
+
+  const sendVerificationCode = () => {
+    const userId = localStorage.getItem("currentUser");
+    const idNumber = localStorage.getItem("userName"); // localStorage'dan çekiyoruz
+    const password = localStorage.getItem("userPassword");
+
+    fetch("http://localhost:9090/auth/verify-and-authenticate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password: password,
+        idNumber: idNumber,
+        verificationCode: verificationCode,
+        userType:"INDIVIDUAL"
+
+
+      }),
+    })
+    .then((res) => {
+      if (!res.ok) {
+        return handleFetchError(res);
+      }
+      return res.json();
+    })
+    .then((result) => {
+      if(result && result.userId) {
+      localStorage.setItem("tokenKey", result.token);
+      localStorage.setItem("currentUser", result.userId);
+      setSuccessMessage(result.message);
+      setSnackbarOpen(true);
+    //  onLogin(); 
+      navigate("/");
+    }
+    })
+    .catch((err) => {
+      setErrorMessages([err.message]);
+    });
+  };
+
+  const handleLoginButton = () => {
+    console.log('idNumber:', idNumber);
+    console.log('Password:', password);
+    setErrorMessages([]);
+    sendLoginRequest();
+  setUsername("");
+  //  setPassword("");
+  };
+
+ 
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleVerificationCodeSubmit = () => {
+    setErrorMessages([]);
+    sendVerificationCode();
+  };
+
+  const handleCustomerTypeChange = (isIndividual) => {
+    setIsIndividual(isIndividual);
+    console.log("Selected UserType:", isIndividual ? "Individual" : "Corporate");
+  };
   return (
     <div>
       <Container>
@@ -23,58 +149,95 @@ export default function MainPageBirey() {
             <Button
               color="inherit"
               variant="contained"
-              sx={{ position: 'absolute', top: '800px', left: '200px', width: '150px', height: '50px', 
+              sx={{ position: 'absolute', top: '800px', left: '1600px', width: '150px', height: '50px', 
               backgroundColor: "#ffffff", color: '#000000', '&:hover': { backgroundColor: '#f0f0f0' } }} >
               Canlı Destek
             </Button>
-            <div
+             {/*Panel düzenlemesi*/}
+            <div  
               style={{ position: 'absolute', top: '175px', left: '1152px', width: '575px', height: '540px', 
-              backgroundColor: 'lightskyblue', color: 'white', padding: '50px', borderRadius: '4px' }}>
+              backgroundColor: '#031a55', color: 'white', padding: '50px', borderRadius: '4px' }}>
               <MDBBtnGroup aria-label='Basic example' style={{ position: 'relative', top: '80px', left: '78px', width: '300px', height: '60px', }}>
-                <MDBBtn  href='#' active onClick={handleBireyselClick}
+                <MDBBtn  href='#' active 
                   style={{ backgroundColor: 'white', color: 'black',  borderRight: '1px solid black', 
-                     display: 'flex',  alignItems: 'center',justifyContent: 'center'}}>
+                     display: 'flex',  alignItems: 'center',justifyContent: 'center'}} onClick={handlegirisClick}>
                   Bireysel
+                  
                 </MDBBtn>
-                <MDBBtn href='#' active onClick={handleKurumsalClick}
+                <MDBBtn href='#' active 
                 style={{ backgroundColor: 'white', color: 'black',  borderLeft: '1px solid black', 
                   display: 'flex',  alignItems: 'center',justifyContent: 'center'}}>
-                  Kurumsal
+                  Personel
                 </MDBBtn>
               </MDBBtnGroup>
-              <Typography variant="h4" style={{ marginTop: '-50px', marginLeft: '40px', whiteSpace: 'nowrap', color: 'black' }}>
+              <Typography variant="h4" style={{ marginTop: '-50px', marginLeft: '40px', whiteSpace: 'nowrap', color: 'white' }}>
                 Hızlı Ve Güvenilir İşlemler
               </Typography>
               <div className="absolute w-[400px] h-[50px] bg-darkblue text-white p-[50px] rounded-lg" style={{ top: '150px', left: '80px' }}>
-                <MDBInput label="Şifre" id="form1" type="ŞifreB" className="w-1/2 h-10 mt-20 ml-0 bg-white text-black" />
+                <MDBInput label="Şifre" id="form1" type="password" className="w-1/2 h-10 mt-20 ml-0 bg-white text-black"  value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               <div className="absolute w-[400px] h-[50px] bg-darkblue text-white p-[50px] rounded-lg" style={{ top: '90px', left: '80px' }}>
-                <MDBInput label="TC Kimlik No veya Müşteri No" id="TCKN" type="text" className="w-1/2 h-10 mt-20 ml-0 bg-white text-black" />
+                <MDBInput label="TC Kimlik No veya Müşteri No" id="TCKN" type="text" className="w-1/2 h-10 mt-20 ml-0 bg-white text-black"  value={idNumber} onChange={(e) => setIdNumber(e.target.value)} />
               </div>
-            </div>
-            <div style={{ position: 'absolute', marginTop: '480px', marginLeft: '920px' }}>
-              <MDBCheckbox
-                id='controlledCheckbox'
-                label={<span className="text-white">Beni Hatırla</span>}
-                checked={checked}
-                onChange={() => setChecked(!checked)}
-              />
+             
+              {showVerificationField && (
+                <div>
+                  <MDBInput label="Doğrulama Kodu" id="verificationCode"  type="text"value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)}
+                    style={{  width: '300px',  marginTop: '227px', marginLeft: '80px', color: '#white',  padding: '10px', fontSize: '16px', backgroundColor:'white'}}/>
+                  <Button
+                    onClick={handleVerificationCodeSubmit} variant="contained"style={{ marginTop: '-70px', backgroundColor:'white', color:'black', marginLeft: '400px' }} >
+                    Doğrula
+                  </Button>
+                </div>
+              )}
             </div>
             <Button
               color="inherit"
               variant="contained"
               sx={{ position: 'absolute', top: '560px', left: '1350px', width: '150px', height: '50px', backgroundColor: "#ffffff", color: '#000000', '&:hover': { backgroundColor: '#f0f0f0' } }}
-            >
+              onClick={handleLoginButton} >
               Giriş Yap
             </Button>
-            <Typography variant="h8" style={{ position: 'absolute', top: '625px', left: '1270px', whiteSpace: 'nowrap', color: 'black' }}>
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity={errorMessages.length > 0 ? 'error' : 'success'}>
+          {errorMessages.length > 0 ? errorMessages.join(', ') : successMessage}
+        </Alert>
+      </Snackbar>
+           
+            <Typography variant="h8" style={{ position: 'absolute', top: '625px', left: '1270px', whiteSpace: 'nowrap', color: 'white' }}>
               Üye Değil Misin?
             </Typography>
-            <a href="#" className="stretched-link" style={{ position: 'absolute', top: '625px', left: '1390px', color: 'black', textDecoration: 'underline' }}>Müşterimiz Ol</a>
-            <a href="#" className="stretched-link" style={{ position: 'absolute', top: '625px', left: '1500px', color: 'white',textDecoration: 'underline' }}>Şifremi Unuttum</a>
+            <Link 
+                  to="/bireysel-musteri-ol"
+                  style={{position: 'absolute',top: '625px',left: '1390px',color: 'grey', textDecoration: 'underline',display: 'inline-block', }}>
+                  Müşterimiz Ol
+            </Link>
+            <Link   to="/sifremi-unuttum"   style={{ position: 'absolute', top: '625px', left: '1500px', color: 'grey',textDecoration: 'underline' }}>Şifremi Unuttum</Link>
           </Grid>
         </Grid>
+
+        {errorMessages.length > 0 && (
+                <div style={{
+                  backgroundColor: '#f8d7da',
+                  color: '#721c24',
+                  padding: '15px',
+                  borderRadius: '5px',
+                  border: '1px solid #f5c6cb',
+                  marginTop: '10px',  
+                  marginBottom: '20px' 
+                }}>
+                  <strong>Hata Mesajları:</strong>
+                  <ul style={{ padding: '0', listStyleType: 'none', margin: '0' }}>
+                    {errorMessages.map((error, index) => (
+                      <li key={index} style={{ marginBottom: '5px' }}>
+                        {error}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
       </Container>
+         
     </div>
   );
 }
