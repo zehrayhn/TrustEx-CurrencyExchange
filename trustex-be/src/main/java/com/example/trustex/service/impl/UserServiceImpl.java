@@ -97,6 +97,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByCustomerNumber(String customerNumber){
+        return userRepository.findByCustomerNumber(customerNumber);
+    }
+
+    @Override
     public UserProfileDto saveUser(User user) {
         User user1 = userRepository.findById(user.getId()).orElseThrow(() ->
                 new BusinessException(HttpStatus.BAD_REQUEST , Collections.singletonList("Kullanıcı bulunamadı")));

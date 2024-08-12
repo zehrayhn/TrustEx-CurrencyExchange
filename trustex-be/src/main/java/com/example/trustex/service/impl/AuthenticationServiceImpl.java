@@ -39,11 +39,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final NumberGeneratorService numberGeneratorService;
 
     private final MailService mailService;
     private final UserService userService;
     private final UserRelationshipRepository userRelationshipRepository;
-    private final NumberGeneratorService numberGeneratorService;
     private  final CreatePersonnelCustomerDtoConverter createPersonnelCustomerDtoConverter;
     Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
     private static final int EXPIRATION_TIME_IN_HOURS = 1;
@@ -77,6 +77,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 user.setVerified(false);
                 user.setCompanyTitle(null);
                 user.setCorporateCustomerNumber(null);
+                user.setCustomerNumber(numberGeneratorService.generateUniqueCustomerNumber());
                 userRepository.save(user);
 
                 break;

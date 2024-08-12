@@ -19,7 +19,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class TransferServiceImpl implements TransferService {
     public TransferResponseDto transferFunds(TransferRequestDto transferRequestDTO) {
         User sender = userService.findById(transferRequestDTO.getSenderId())
                 .orElseThrow(() -> new UserNotFoundException("Gönderici bulunamadı."));
-        User receiver = userService.findById(transferRequestDTO.getReceiverId())
+        User receiver = userService.findByCustomerNumber(transferRequestDTO.getReceiverCustomerNumber())
                 .orElseThrow(() -> new UserNotFoundException("Alıcı bulunamadı."));
 
         Currency currency = currencyService.findById(transferRequestDTO.getCurrencyCode())
@@ -83,15 +85,34 @@ public class TransferServiceImpl implements TransferService {
         transferRepository.save(transfer);
 
         TransferResponseDto responseDTO = new TransferResponseDto();
-        responseDTO.setTransactionId(transfer.getId());
+        responseDTO.setTransferTransactionId(transfer.getId());
         responseDTO.setSenderId(sender.getId());
-        responseDTO.setReceiverId(receiver.getId());
+        responseDTO.setReceiverCustomerNumber(receiver.getCustomerNumber());
         responseDTO.setCurrencyCode(currency.getCurrencyCode());
         responseDTO.setAmount(transfer.getAmount());
         responseDTO.setStatus(transfer.getStatus());
         responseDTO.setMessage(transfer.getMessage());
 
         return responseDTO;
+    }
+
+    @Override
+    public List<TransferResponseDto> getUserSentTransfers(Long userId) {
+        List<Transfer> transfers = transferRepository.findBySenderId(userId);
+        return transfers.stream()
+                .map(transfer -> {
+                    TransferResponseDto dto = new TransferResponseDto();
+                    dto.setTransferTransactionId(transfer.getId());
+                    dto.setSenderId(transfer.getSender().getId());
+                    dto.setReceiverCustomerNumber(transfer.getReceiver().getCorporateCustomerNumber() != null ? transfer.getReceiver().getCorporateCustomerNumber() : transfer.getReceiver().getCustomerNumber());
+                    dto.setCurrencyCode(transfer.getCurrency().getCurrencyCode());
+                    dto.setTimestamp(LocalDateTime.now());
+                    dto.setAmount(transfer.getAmount());
+                    dto.setStatus(transfer.getStatus());
+                    dto.setMessage(transfer.getMessage());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
 }

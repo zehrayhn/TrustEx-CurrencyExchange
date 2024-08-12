@@ -10,9 +10,9 @@ public enum CurrencyCode {
     AUD,
     CAD,
     CNY,
-    HKD,
-    NZD,
-    SEK,
+    DKK,
     NOK,
-    SGD
+    RON,
+    SAR,
+    SEK
 }

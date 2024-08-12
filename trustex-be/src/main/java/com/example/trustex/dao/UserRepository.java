@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
@@ -27,12 +27,13 @@ public interface UserRepository extends JpaRepository<User,Long> {
     boolean existsByIdNumberAndUserType(String idNumber, UserType userType);
 
 
-  //  List<User> findByIdNumberAndUserType(String idNumber, UserType userType);
-  @Query("SELECT u FROM User u WHERE u.idNumber = :idNumber AND u.userType = :userType")
-  List<User> findByIdNumberAndUserType(@Param("idNumber") String idNumber, @Param("userType") UserType userType);
+    //  List<User> findByIdNumberAndUserType(String idNumber, UserType userType);
+    @Query("SELECT u FROM User u WHERE u.idNumber = :idNumber AND u.userType = :userType")
+    List<User> findByIdNumberAndUserType(@Param("idNumber") String idNumber, @Param("userType") UserType userType);
 
+    boolean existsByCustomerNumber(String customerNumber);
 
-    boolean existsByCustomerNumber(String number);
+    Optional<User> findByCustomerNumber(String customerNumber);
 
     User findByFirstnameAndLastnameAndCustomerNumber(String firstName, String lastName, String customerNumber);
 
