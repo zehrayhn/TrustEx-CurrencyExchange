@@ -4,13 +4,8 @@ import com.example.trustex.entity.UserType;
 import lombok.Data;
 
 @Data
-public class VerifyCodeRequestDto {
+public class PersonnelDto {
 
-    private String idNumber;
-    private String verificationCode;
-    private String password;
+    private long personelId;
     private UserType userType;
-
-
-
 }

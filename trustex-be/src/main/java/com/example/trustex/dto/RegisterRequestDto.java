@@ -27,6 +27,7 @@ public class RegisterRequestDto {
     private String commercialRegistrationNumber;
     private String mersisNumber;
     private String companyTitle;
+    private String taxNumber;
 
 
 }

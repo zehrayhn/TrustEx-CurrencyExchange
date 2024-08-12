@@ -63,8 +63,8 @@ public class SecurityConfig {
                 .cors((AbstractHttpConfigurer::disable))
                 .authorizeHttpRequests(authorize -> authorize
                                 .anyRequest().permitAll()
-//                        .requestMatchers("/auth/register", "/auth/login", "/","/auth/verify","/auth/verify-code","/auth/send-verification-code",
-//                                "/auth/verify-and-authenticate","/auth/forgot-password","/auth/verify?token=", "/auth/reset-password/**","/auth/reset-password").permitAll()
+//                        .requestMatchers("/auth/register", "/auth/login", "/","/auth/verify","/auth/verify-code","/auth/send-verification-code","/auth/verify/**",
+//                                "/auth/verify-and-authenticate","/auth/forgot-password","/auth/verify?token=", "/auth/reset-password/**","/auth/reset-password","/api/personnel-customer","/api/v1/personnel-customers/**").permitAll()
 //                        .requestMatchers("/profile").authenticated()
 //                        .requestMatchers(HttpMethod.POST,"/trustex/supports").hasAuthority("ROLE_USER")
 //                        .requestMatchers(HttpMethod.GET,"/trustex/support").hasAuthority("ROLE_USER")

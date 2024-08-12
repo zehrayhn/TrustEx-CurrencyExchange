@@ -14,6 +14,10 @@ public interface UserService {
     UserProfileDto getUserDtoById(Long id);
     User getUserByEmail(String email);
 
+    boolean existsByEmail(String email);
+
+
+
     List<User> getUsersByIdNumberAndType(String idNumber, UserType userType);
     Optional<User> findById(Long userId);
 

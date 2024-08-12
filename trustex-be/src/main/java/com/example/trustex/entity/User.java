@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="users",uniqueConstraints = {
@@ -38,6 +40,9 @@ public class User extends BaseEntity implements UserDetails {
     private String commercialRegistrationNumber;
     private String mersisNumber;
     private String companyTitle;
+    private String taxNumber;
+    @Column(unique = true,  length = 11)
+    private String customerNumber;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Assets> assets;
@@ -52,6 +57,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transfer> receivedTransfers;
+
+     @OneToMany(mappedBy = "personnel", cascade = CascadeType.ALL, orphanRemoval = true)
+     private List<UserRelationship> userRelationships;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -166,5 +174,11 @@ public class User extends BaseEntity implements UserDetails {
         this.verificationToken = verificationToken;
     }
 
+    public String getTaxNumber() {
+        return taxNumber;
+    }
 
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
+    }
 }

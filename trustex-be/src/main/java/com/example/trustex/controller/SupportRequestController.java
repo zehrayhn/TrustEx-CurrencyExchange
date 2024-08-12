@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.trustex.util.AppConstants.BASE_URL;
+
 @RestController
-@RequestMapping("/trustex/supports")
+@RequestMapping(BASE_URL+"/supports")
 @RequiredArgsConstructor
 public class SupportRequestController {
     private final SupportRequestService supportRequestService;
