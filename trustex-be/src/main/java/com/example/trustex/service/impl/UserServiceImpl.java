@@ -1,6 +1,8 @@
 package com.example.trustex.service.impl;
 
 import com.example.trustex.dao.UserRepository;
+import com.example.trustex.dto.UserDto;
+import com.example.trustex.dto.UserProfileDto;
 import com.example.trustex.entity.User;
 import com.example.trustex.entity.UserType;
 import com.example.trustex.exception.BusinessException;
@@ -53,6 +55,22 @@ public class UserServiceImpl implements UserService {
                 new BusinessException(HttpStatus.BAD_REQUEST , Collections.singletonList("Kullanıcı bulunamadı")));
     }
 
+    @Override
+    public UserProfileDto getUserDtoById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new BusinessException(HttpStatus.BAD_REQUEST , Collections.singletonList("Kullanıcı bulunamadı")));
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setId(user.getId());
+        userProfileDto.setFirstname(user.getFirstname());
+        userProfileDto.setLastname(user.getLastname());
+        userProfileDto.setIdNumber(user.getIdNumber());
+        userProfileDto.setCountry(user.getCountry());
+        userProfileDto.setDateOfBirth(user.getDateOfBirth());
+        userProfileDto.setMobilePhone(user.getMobilePhone());
+        userProfileDto.setEmail(user.getEmail());
+
+        return userProfileDto;
+    }
 
 
 
@@ -79,8 +97,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public UserProfileDto saveUser(User user) {
+        User user1 = userRepository.findById(user.getId()).orElseThrow(() ->
+                new BusinessException(HttpStatus.BAD_REQUEST , Collections.singletonList("Kullanıcı bulunamadı")));
+        user1.setFirstname(user.getFirstname());
+        user1.setLastname(user.getLastname());
+        user1.setEmail(user.getEmail());
+        user1.setMobilePhone(user.getMobilePhone());
+        user1.setIdNumber(user.getIdNumber());
+        user1.setCountry(user.getCountry());
+        user1.setDateOfBirth(user.getDateOfBirth());
+        userRepository.save(user1);
+
+        return UserProfileDto.builder()
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .idNumber(user.getIdNumber())
+                .country(user.getCountry())
+                .dateOfBirth(user.getDateOfBirth())
+                .mobilePhone(user.getMobilePhone())
+                .email(user.getEmail())
+                .build();
     }
 
 

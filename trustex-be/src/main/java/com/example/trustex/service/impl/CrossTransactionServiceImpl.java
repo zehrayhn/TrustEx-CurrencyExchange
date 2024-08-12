@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,18 @@ public class CrossTransactionServiceImpl implements CrossTransactionService {
     private final AssetsRepository assetsRepository;
     private final CrossTransactionRepository crossTransactionRepository;
 
+    public List<CrossTransactionResponseDto> getAllTransactions() {
+        return crossTransactionRepository.findAll()
+                .stream()
+                .map(CrossTransactionMapperHelper::crossTransactionToCrossTransactionResponseDto)
+                .collect(Collectors.toList());
+    }
+    public List<CrossTransactionResponseDto> getTransactionByUserId(Long userId) {
+        return crossTransactionRepository.findByUserId(userId)
+                .stream()
+                .map(CrossTransactionMapperHelper::crossTransactionToCrossTransactionResponseDto)
+                .collect(Collectors.toList());
+    }
 
     public CrossTransactionResponseDto saveTransaction(CrossTransactionRequestDto crossTransactionRequest) {
 

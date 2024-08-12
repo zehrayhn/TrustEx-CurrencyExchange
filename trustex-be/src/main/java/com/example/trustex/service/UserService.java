@@ -1,5 +1,7 @@
 package com.example.trustex.service;
 
+import com.example.trustex.dto.UserDto;
+import com.example.trustex.dto.UserProfileDto;
 import com.example.trustex.entity.User;
 import com.example.trustex.entity.UserType;
 
@@ -9,7 +11,7 @@ import java.util.Optional;
 public interface UserService {
     User getCurrentUser();
     User getUserById(Long id);
-
+    UserProfileDto getUserDtoById(Long id);
     User getUserByEmail(String email);
 
     boolean existsByEmail(String email);
@@ -19,5 +21,5 @@ public interface UserService {
     List<User> getUsersByIdNumberAndType(String idNumber, UserType userType);
     Optional<User> findById(Long userId);
 
-    User saveUser(User user);
+    UserProfileDto saveUser(User user);
 }
