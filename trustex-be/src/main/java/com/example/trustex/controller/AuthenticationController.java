@@ -1,14 +1,12 @@
 package com.example.trustex.controller;
 
-import com.example.trustex.config.SecurityConfig;
 import com.example.trustex.dto.*;
-import com.example.trustex.entity.User;
-import com.example.trustex.exception.InvalidCredentialsException;
 import com.example.trustex.service.AuthenticationService;
 import com.example.trustex.service.UserService;
 import com.example.trustex.util.ErrorUtils;
 import com.example.trustex.validator.LoginValidator;
 import com.example.trustex.validator.RegisterValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,12 +23,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    private final UserService userService;
     private final LoginValidator loginValidator;
     private final RegisterValidator registerValidator;
     private static final Logger logger = LogManager.getLogger(AuthenticationController.class);
 
-//efsd
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDto request,BindingResult bindingResult){
         registerValidator.validate(request, bindingResult);
@@ -68,9 +64,9 @@ public class AuthenticationController {
 
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordDto request) {
-            authenticationService.sendResetPasswordEmail(request.getEmail());
-            return ResponseEntity.ok().build();
+    public ResponseEntity<String>forgotPassword(@RequestBody String email){
+        authenticationService.sendResetPasswordEmail(email);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/reset-password")

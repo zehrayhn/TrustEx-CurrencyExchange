@@ -9,6 +9,7 @@ public class AuthenticateRequestDto {
     private String idNumber;
     private String corporateCustomerNumber;
     private String password;
+    private String taxNumber;
 
 
 }

@@ -62,6 +62,11 @@ public class UserServiceImpl implements UserService {
                 new UserNotFoundException("Kullanıcı bulunamadı " ));
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
 
 
     public List<User> getUsersByIdNumberAndType(String idNumber, UserType userType) {

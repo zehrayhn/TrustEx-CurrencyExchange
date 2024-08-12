@@ -1,7 +1,6 @@
 package com.example.trustex.service;
 
 import com.example.trustex.dto.*;
-import com.example.trustex.entity.User;
 
 
 public interface AuthenticationService {
@@ -18,4 +17,6 @@ public interface AuthenticationService {
     void sendResetPasswordEmail(String email);
 
     void resetPassword(String token, ResetPasswordRequest request);
+
+    CreatePersonnelCustomerDto addPersonnelCustomer(Long personnelId, CreatePersonnelCustomerDto createPersonelCustomerDto);
 }
