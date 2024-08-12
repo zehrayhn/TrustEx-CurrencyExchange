@@ -18,8 +18,6 @@ public class Currency {
     private String currencyLabelEN;
     @JoinColumn(name = "currency_label_tr")
     private String currencyLabelTR;
-    @JoinColumn(name = "country_code")
-    private String countryCode;
     @OneToMany(mappedBy = "currency")
     private List<ExchangeRates> exchangeRates;
 
