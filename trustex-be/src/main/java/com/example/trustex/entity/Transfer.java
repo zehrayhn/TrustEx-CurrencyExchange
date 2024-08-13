@@ -20,7 +20,7 @@ public class Transfer {
     private User sender;
 
     @ManyToOne
-    @JoinColumn(name = "receiver_id", nullable = false)
+    @JoinColumn(name = "receiver_customerNumber", nullable = false)
     private User receiver;
 
     @ManyToOne

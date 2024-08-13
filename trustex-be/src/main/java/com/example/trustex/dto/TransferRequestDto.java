@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class TransferRequestDto {
     private Long senderId;
-    private Long receiverId;
+    private String receiverCustomerNumber;
     private String currencyCode;
     private double amount;
 }

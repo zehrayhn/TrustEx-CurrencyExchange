@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/assets")
@@ -26,6 +27,25 @@ public class AssetsController {
         return ResponseEntity.ok(assets);
     }
 
+    @GetMapping("/user/{userId}/tl")
+    public ResponseEntity<List<AssetResponseDto>> getUserAssetsInTL(@PathVariable Long userId) {
+        return ResponseEntity.ok(assetsService.getUserAssetsInTL(userId));
+    }
+
+
+    @GetMapping("/total-value-tl/{userId}")
+    public ResponseEntity<Double> getTotalAssetValueInTL(@PathVariable Long userId) {
+        double totalValueInTL = assetsService.getTotalAssetValueInTL(userId);
+        return ResponseEntity.ok(totalValueInTL);
+    }
+
+    @GetMapping("/user/{userId}/asset/{assetId}/value-tl")
+    public ResponseEntity<Double> getAssetValueInTL(@PathVariable Long userId, @PathVariable Long assetId) {
+        Assets asset = assetsService.getAssetById(assetId);
+        double valueInTL = assetsService.getAssetValueInTL(asset);
+        return ResponseEntity.ok(valueInTL);
+    }
+
     @GetMapping("/user")
     public ResponseEntity<List<Assets>> getAssetsByUser(Principal principal) {
         User user = getCurrentUser(principal);
@@ -34,7 +54,7 @@ public class AssetsController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Assets>> getAssetsByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<AssetResponseDto>> getAssetsByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(assetsService.getAssetsByUserId(userId));
     }
 

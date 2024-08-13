@@ -21,5 +21,7 @@ public interface UserService {
     List<User> getUsersByIdNumberAndType(String idNumber, UserType userType);
     Optional<User> findById(Long userId);
 
+    Optional<User> findByCustomerNumber(String customerNumber);
+
     UserProfileDto saveUser(User user);
 }
