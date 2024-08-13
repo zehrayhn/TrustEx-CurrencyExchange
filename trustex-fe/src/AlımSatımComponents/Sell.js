@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button, Grid, Typography, InputAdornment, Slider, Box } from '@mui/material';
 
-const Sell = ({ exchangeRate ,currencyCode }) => {
+const Sell = ({ exchangeRate, currencyCode }) => {
   const [amount, setAmount] = useState('');
   const [assets, setAssets] = useState();
-  const userId = 1; // Default user ID
+  const userId = 1;
 
   const handleAmountChange = (event) => {
     setAmount(event.target.value);
@@ -17,7 +17,7 @@ const Sell = ({ exchangeRate ,currencyCode }) => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await fetch('/api/v1/assets/user/1/'+currencyCode);
+        const response = await fetch('/api/v1/assets/user/1/' + currencyCode, { headers: { "Authorization": localStorage.getItem("tokenKey") } });
         if (!response.ok) {
           throw new Error('Failed to fetch exchange rate');
         }
@@ -33,7 +33,7 @@ const Sell = ({ exchangeRate ,currencyCode }) => {
   const handleSellTransaction = async () => {
     const transactionData = {
       userId: userId,
-      transactionType: 'BUY',
+      transactionType: 'SELL',
       targetCurrencyCode: currencyCode,
       amount: parseFloat(amount),
     };
@@ -42,22 +42,21 @@ const Sell = ({ exchangeRate ,currencyCode }) => {
       const response = await fetch('/api/v1/transactions/buySell', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json', "Authorization": localStorage.getItem("tokenKey"),
         },
         body: JSON.stringify(transactionData),
       });
 
       if (!response.ok) {
-        alert('Transaction failed');
+        alert('İşlem Başarısız. Bakiyenizi Kontrol Edin.');
         throw new Error(`Error: ${response.status}`);
-        
+
       }
 
       const data = await response.json();
       console.log('Transaction successful:', data);
-      alert('Transaction successful:');
+      alert('İşlem Başarılı:');
       window.location.reload();
-      // Optionally, reset the form or update the UI with the response
     } catch (error) {
       console.error('Transaction failed:', error);
     }

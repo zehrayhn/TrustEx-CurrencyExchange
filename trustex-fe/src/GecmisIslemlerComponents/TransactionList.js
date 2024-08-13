@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Box, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, TableFooter, TablePagination, Typography } from '@mui/material';
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 
-// Define custom colors for the table
-const headerColor = '#031a55'; // Dark blue for header
-const cellColor = '#abddff'; // Light blue for cells
+
+const headerColor = '#031a55';
+const cellColor = '#abddff';
 
 const TransactionList = () => {
   const [transactions, setTransactions] = useState([]);
@@ -15,15 +15,15 @@ const TransactionList = () => {
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: headerColor,
       color: theme.palette.common.white,
-      textAlign: 'center', // Center the text horizontally
-      fontSize: '1.25rem', // Increase font size
+      textAlign: 'center',
+      fontSize: '1.25rem',
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: '1.25rem', // Increase font size
-      textAlign: 'center', // Center the text horizontally
+      fontSize: '1.25rem',
+      textAlign: 'center',
     },
   }));
-  
+
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
       backgroundColor: cellColor,
@@ -43,7 +43,7 @@ const TransactionList = () => {
         const response = await fetch("/api/v1/transactions/getAll", {
           method: "GET",
           headers: {
-            "Authorization": localStorage.getItem("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMzQ1Njc1NjY1Nl9JTkRJVklEVUFMIiwiaWF0IjoxNzIzMTIzMzA2LCJleHAiOjE3MjMxMjY1NDZ9.e_138OQStCBy5mXRj8czsXeYlhhnUU-xZEUH1HuiyrA"),
+            "Authorization": localStorage.getItem("tokenKey"),
             "Content-Type": "application/json"
           }
         });

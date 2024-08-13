@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Typography, Box } from '@mui/material';
 
-const BuyInfo = ({ onExchangeRateChange ,currencyCode}) => {
+const BuyInfo = ({ onExchangeRateChange, currencyCode }) => {
   const [exchangeRate, setExchangeRate] = useState(null);
 
   useEffect(() => {
     const fetchExchangeRate = async () => {
       try {
-        const response = await fetch('/api/v1/exchange-rates/getExchangeRate/'+currencyCode);
+        const response = await fetch('/api/v1/exchange-rates/getExchangeRate/' + currencyCode, { headers: { "Authorization": localStorage.getItem("tokenKey") } });
         if (!response.ok) {
           throw new Error('Failed to fetch exchange rate');
         }
         const data = await response.json();
         setExchangeRate(data);
-        onExchangeRateChange(data); // Pass the exchange rate to the parent component
+        onExchangeRateChange(data);
       } catch (error) {
         console.error('Error fetching exchange rate:', error);
       }
@@ -44,7 +44,6 @@ const BuyInfo = ({ onExchangeRateChange ,currencyCode}) => {
             (%+0.07)
           </Typography>
         </Grid>
-        {/* Other Grid items */}
       </Grid>
     </Box>
   );

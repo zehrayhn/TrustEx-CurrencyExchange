@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,9 +8,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import '../App.css'; 
-import '../AnaSayfaCss/Table.css';
 import Flag from 'react-world-flags';
+import icons from 'currency-icons';
+import '../App.css';
+import '../AnaSayfaCss/Table.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -30,39 +32,32 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(icon, name, alış, satış, günlük, saat) {
-  return { icon, name, alış, satış, günlük, saat };
+function digitSetting(x) {
+  return Number.parseFloat(x).toFixed(8);
 }
-
-const rows = [
-  createData('US', 'ABD Doları', 159, 6.0, 24, 4.0),
-  createData('EU', 'Euro', 237, 9.0, 37, 4.3),
-  createData('GB', 'Sterlin', 262, 16.0, 24, 6.0),
-  createData('CH', 'İsviçre Frangı', 305, 3.7, 67, 4.3),
-  createData('CA', 'Kanada Doları', 356, 16.0, 49, 3.9),
-  createData('RU', 'Rus Rublesi', 356, 16.0, 49, 3.9),
-  createData('AE', 'Birleşik Arap Emirlikleri Dirhemi', 356, 16.0, 49, 3.9),
-  createData('AU', 'Avustralya Doları', 356, 16.0, 49, 3.9),
-  createData('DK', 'Danimarka Kronu', 356, 16.0, 49, 3.9),
-  createData('SE', 'İsveç Kronu', 356, 16.0, 49, 3.9),
-  createData('NO', 'Norveç Kronu', 356, 16.0, 49, 3.9),
-  createData('CN', 'Çin Yuanı', 356, 16.0, 49, 3.9),
-  createData('JP', 'Japon Yeni', 356, 16.0, 49, 3.9),
-  createData('KW', 'Kuveyt Dinarı', 356, 16.0, 49, 3.9),
-  createData('IN', 'Hindistan Rupisi', 356, 16.0, 49, 3.9),
-];
-
 export default function CustomizedTables() {
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/v1/exchange-rates/getMain')
+      .then((response) => response.json())
+      .then((data) => {
+        setRows(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="table data">
         <TableHead>
           <TableRow>
             <StyledTableCell></StyledTableCell>
-            <StyledTableCell >Para Birimi</StyledTableCell>
+            <StyledTableCell>Para Birimi</StyledTableCell>
             <StyledTableCell align="right">Alış</StyledTableCell>
             <StyledTableCell align="right">Satış</StyledTableCell>
-            <StyledTableCell align="right">Günlük Değişim</StyledTableCell>
             <StyledTableCell align="right">Saat</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -70,16 +65,16 @@ export default function CustomizedTables() {
           {rows.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">
+                {icons[row.currencyCode].symbol}
                 <Flag
-                  code={row.icon} 
+                  code={row.countryCode}
                   style={{ marginRight: 8 }}
                 />
               </StyledTableCell>
-              <StyledTableCell align="left">{row.name}</StyledTableCell>
-              <StyledTableCell align="right">{row.alış}</StyledTableCell>
-              <StyledTableCell align="right">{row.satış}</StyledTableCell>
-              <StyledTableCell align="right">{row.günlük}</StyledTableCell>
-              <StyledTableCell align="right">{row.saat}</StyledTableCell>
+              <StyledTableCell align="left">{row.currencyCode} </StyledTableCell>
+              <StyledTableCell align="right">{digitSetting(1 / row.sellRate)}</StyledTableCell>
+              <StyledTableCell align="right">{digitSetting(1 / row.buyRate)}</StyledTableCell>
+              <StyledTableCell align="right">{row.timeStamp}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

@@ -16,7 +16,6 @@ import DataTableHaberveDoviz from './HaberveDovizComponents/DataTableHaberveDovi
 import backgroundImage from './images/background.jpg';
 import background3Image from './images/background3.jpg';
 import background2Image from './images/background2.png';
-import backgroundconverterImage from './images/backgroundconverter.jpg';
 import AydınlatmaMetni from './AydınlatmaMetni/AydınlatmaMetni';
 import NavbarPersonelAna from './PersonelAnaSayfaComponents/NavbarPersonelAna';
 import MainPagePersonelAna from './PersonelAnaSayfaComponents/MainPagePersonelAna';
@@ -37,11 +36,24 @@ import BuyInfo from './AlımSatımComponents/BuyInfo';
 import Sell from './AlımSatımComponents/Sell';
 import CrossCurrency from './CrossCurrencyComponents/CrossCurrency'
 import TransactionList from './GecmisIslemlerComponents/TransactionList';
+import NavbarHesapOzetim from './HesapOzetimComponents/NavbarHesapOzetim';
+import MainPageHesapOzetim from './HesapOzetimComponents/MainPageHesapOzetim';
+import DataTableHesapOzetim from './HesapOzetimComponents/DataTableHesapOzetim';
+import NavbarAlımSatım from './AlımSatımComponents/NavbarAlımSatım';
+import NavbarCrossCurrency from './CrossCurrencyComponents/NavbarCrossCurrency';
+import CrossTransaction from './GecmisIslemlerComponents/CrossTransaction';
+import AssetsPageScreen from './AssetsPage/AssetsPageScreen';
+import NavbarAssets from './AssetsPage/NavbarAssets';
+import NavbarDeposit from './DepositWithdrawTransferPage/NavbarDeposit';
+import DepositWithdrawPage from './DepositWithdrawTransferPage/DepositWithdrawPage';
+import MainPageKurum from './GirisYapKurumComponents/MainPageKurum';
+import NavbarKurum from './GirisYapKurumComponents/NavbarKurum';
+import DataTableKurum from './GirisYapKurumComponents/DataTableKurum';
+import NavbarGecmis from './GecmisIslemlerComponents/NavbarGecmis';
 
 const Background = () => {
   const location = useLocation();
   const isMainPage = location.pathname === '/';
-  const isConvertPage = location.pathname === '/Convert';
 
   return (
     <>
@@ -101,21 +113,6 @@ const Background = () => {
           />
         </>
       )}
-      {isConvertPage && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100vh',
-            backgroundImage: `url(${backgroundconverterImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            zIndex: -1,
-          }}
-        />
-      )}
     </>
   );
 };
@@ -133,9 +130,10 @@ function App() {
               <DataTableAna />
             </div>
             <div className="relative">
-              <div className="relative bottom-8 right-0 transform translate-x-50 w-custom-width h-custom-height mx-auto my-24 p-0">
-                <CurrencyConverter />
-              </div>
+            <div
+              style={{position: "absolute",top: "-40px", right: "500px", width: "450px", height: "500px", margin: "0 auto", padding: "0", transform: "translateX(-50%)", }}>
+              <CurrencyConverter />
+            </div>
             </div>
           </>
         } />
@@ -148,6 +146,13 @@ function App() {
             </div> 
           </>
         } />
+        <Route path="/kurumsal-giris" element={
+          <>
+            <MainPageKurum />
+            <NavbarKurum />
+            <DataTableKurum />
+          </>
+        } />
         <Route path="/bireysel-musteri-ol" element={
           <>
             <NavbarBMOL />
@@ -156,12 +161,11 @@ function App() {
         } />
         <Route path="/sifre-merkezi" element={
           <>
-            <NavbarSifreMerkezi />
-            <SifremiUnuttum/>
+             <NavbarSifreMerkezi />
+             <SifremiUnuttum/>
           </>
         } />
-       
-         <Route path="/reset-password" element={
+         <Route path="/auth/reset-password" element={
           <>
             <NavbarSifreMerkezi />
             <ResetPassword/>
@@ -176,6 +180,86 @@ function App() {
         <Route path="/aydınlatma-metni" element={
           <>
            <AydınlatmaMetni />
+          </>
+        } />
+        <Route path="/hesap-ozetim" element={
+          <>
+            <MainPageHesapOzetim />
+            <NavbarHesapOzetim/>
+            <DataTableHesapOzetim/>
+          </>
+        } />
+        <Route path="/al-sat" element={
+          <>
+            <DovizAlSat />
+            <NavbarDovizAlSat/>
+            
+          </>
+        } />
+        <Route path="/transaction" element={
+          <>
+            <BuySell />
+            <NavbarAlımSatım/>
+            
+          </>
+        } />
+          <Route path="/hesap-detay" element={
+          <>
+            <AssetsPageScreen />
+            <NavbarAssets/>     
+          </>
+        } />
+        <Route path="/capraz-islem" element={
+          <>
+            <CrossCurrency />
+            <NavbarCrossCurrency/>
+            
+          </>
+        } />
+        <Route path="/yatır-çek-transfer" element={
+          <>
+            <DepositWithdrawPage/>
+            <NavbarDeposit/>
+            
+          </>
+        } />
+      
+        <Route path="/haber-doviz" element={
+          <>
+            <DataTableHaberveDoviz />
+            <NavbarHaberveDoviz/>
+            <MainPageHaberveDoviz/>
+          </>
+        } />
+        <Route path="/profil-birey" element={
+          <>
+            <MainPageProfilBirey />
+            <NavbarProfilBirey />
+          </>
+        } />
+         <Route path="/personel-ana-sayfa" element={
+          <>
+           <MainPagePersonelAna />
+           <NavbarPersonelAna />
+          </>
+        } />
+        <Route path="/musteri-ekle" element={
+          <>
+           <MainPageMüsteriEkle />
+           <NavbarMüsteriEkle />
+          </>
+        } />
+        <Route path="/profil-personel" element={
+          <>
+           <MainPageProfilPersonel />
+           <NavbarProfilPersonel />
+          </>
+        } />
+         <Route path="/gecmis-islemlerim" element={
+          <>
+           <TransactionList />
+           <CrossTransaction />
+           <NavbarGecmis />
           </>
         } />
       </Routes>

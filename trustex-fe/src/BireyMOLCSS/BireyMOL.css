@@ -1,7 +1,6 @@
 .country-select-container {
-    max-height: 200px; /* Kapsayıcı yüksekliğini belirleyin */
-    overflow-y: auto; /* Dikey kaydırma çubuğu ekleyin */
-    border: 1px solid #ccc; /* Kenarlık ekleyin */
-    border-radius: 4px; /* Köşeleri yuvarlatın */
-  }
-  
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

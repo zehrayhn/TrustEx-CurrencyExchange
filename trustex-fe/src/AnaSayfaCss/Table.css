@@ -1,21 +1,22 @@
 .table-data {
-  position: absolute; /* Tabloyu belirli bir konumda tutar */
-  top: 1550px; /* Yukarıdan 20px boşluk */
-  left: 575px; /* Soldan 20px boşluk */
+  position: absolute;
+  top: 1550px;
+  left: 575px;
 }
+
 .table-data {
   width: 40%;
 }
 
-.table-data th, .table-data td {
-  padding: 10px; /* Hücre içi boşluk */
+.table-data th,
+.table-data td {
+  padding: 10px;
 }
 
 .table-data tr {
-  line-height: 0.1em; /* Satır yüksekliği */
+  line-height: 0.1em;
 }
 
-/* Satır yüksekliğini manuel olarak ayarlama */
 .table-data tr.custom-height {
-  height: 50px; /* Satır yüksekliği */
+  height: 50px;
 }

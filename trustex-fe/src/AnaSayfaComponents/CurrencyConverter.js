@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
 import CurrencyDropdown from "./CurrencyDropdown";
+import { Typography } from "@mui/material";
 import { HiArrowsRightLeft } from "react-icons/hi2";
-import '../AnaSayfaCss/CurrencyConverter.module.css';
+import "../ConverterCss/ConverterCss.css";
+import { MDBIcon } from "mdb-react-ui-kit";
 
 const CurrencyConverter = () => {
   const [currencies, setCurrencies] = useState([]);
   const [amount, setAmount] = useState(1);
   const [fromCurrency, setFromCurrency] = useState("USD");
-  const [toCurrency, setToCurrency] = useState("INR");
+  const [toCurrency, setToCurrency] = useState("EUR");
   const [convertedAmount, setConvertedAmount] = useState(null);
   const [converting, setConverting] = useState(false);
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem("favorites")) || ["INR", "EUR"]
   );
-
-  // Currencies -> https://api.frankfurter.app/currencies
+  const [error, setError] = useState(null);
   const fetchCurrencies = async () => {
     try {
-      const res = await fetch("https://api.frankfurter.app/currencies");
+      const res = await fetch("/api/v1/currencies/getAllCurrencies", { headers: { "Authorization": localStorage.getItem("tokenKey") } });
+      if (!res.ok) throw new Error("Network response was not ok");
       const data = await res.json();
-      setCurrencies(Object.keys(data));
+      setCurrencies(data);
     } catch (error) {
-      console.error("Error Fetching", error);
+      console.error("Error Fetching currencies:", error);
     }
   };
 
@@ -29,20 +31,42 @@ const CurrencyConverter = () => {
     fetchCurrencies();
   }, []);
 
+
+  function digitSetting(x) {
+    return Number.parseFloat(x).toFixed(6);
+  }
+
   const convertCurrency = async () => {
-    if (!amount) return;
+    if (!amount || isNaN(amount) || amount <= 0) return;
     setConverting(true);
+    setError(null);
     try {
-      const res = await fetch(
-        `https://api.frankfurter.app/latest?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`
-      );
+      const res = await fetch("/api/v1/convert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", "Authorization": localStorage.getItem("tokenKey"),
+        },
+        body: JSON.stringify({
+          amount: parseFloat(amount),
+          base: fromCurrency,
+          target: toCurrency,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to convert currency");
+
       const data = await res.json();
-      setConvertedAmount(data.rates[toCurrency] + " " + toCurrency);
+      setConvertedAmount(`${digitSetting(data)} ${toCurrency}`);
     } catch (error) {
-      console.error("Error Fetching", error);
+      setError("Error converting currency: " + error.message);
     } finally {
       setConverting(false);
     }
+  };
+
+  const swapCurrencies = () => {
+    setFromCurrency(toCurrency);
+    setToCurrency(fromCurrency);
   };
 
   const handleFavorite = (currency) => {
@@ -56,21 +80,16 @@ const CurrencyConverter = () => {
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
-  const swapCurrencies = () => {
-    setFromCurrency(toCurrency);
-    setToCurrency(fromCurrency);
-  };
-
   return (
-    <div className="max-w-xl mx-auto my-10 p-5 bg-white rounded-lg "> 
-      <h2 className="mb-5 text-2xl font-semibold text-gray-700">
+    <div className="custom-container">
+      <h2 className="flex justify-center items-center mb-5 text-3xl font-semibold text-white p-4 bg-[#031a55] rounded-lg shadow-md h-16">
         Döviz Çevirici
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
         <CurrencyDropdown
           favorites={favorites}
           currencies={currencies}
-          title="From:"
+          title="Para Birimi:"
           currency={fromCurrency}
           setCurrency={setFromCurrency}
           handleFavorite={handleFavorite}
@@ -88,7 +107,7 @@ const CurrencyConverter = () => {
           currencies={currencies}
           currency={toCurrency}
           setCurrency={setToCurrency}
-          title="To:"
+          title="Çevrilecek Para Birimi:"
           handleFavorite={handleFavorite}
         />
       </div>
@@ -97,9 +116,10 @@ const CurrencyConverter = () => {
           htmlFor="amount"
           className="block text-sm font-medium text-gray-700"
         >
-          Amount:
+          Miktar:
         </label>
         <input
+          id="amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           type="number"
@@ -109,16 +129,30 @@ const CurrencyConverter = () => {
       <div className="flex justify-end mt-6">
         <button
           onClick={convertCurrency}
-          className={`px-5 py-2 text-white rounded-md hover:bg-[#031a55] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 
-                  ${converting ? "animate-pulse" : ""}`}
-          style={{ backgroundColor: '#062065' }}
+          className={`px-5 py-2 text-white rounded-md hover:bg-[#031a55] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${converting ? "animate-pulse" : ""}`}
+          style={{ backgroundColor: "#062065", zIndex: 10 }}
+          disabled={converting || !amount || isNaN(amount) || amount <= 0}
         >
-          Convert
+          Çevir
         </button>
       </div>
       {convertedAmount && (
         <div className="mt-4 text-lg font-medium text-right text-green-600">
-          Converted Amount: {convertedAmount}
+          Çevrilen Miktar: {convertedAmount} <br />
+          <Typography
+            className="custom-typography text-left"
+            sx={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            <MDBIcon fas icon="exclamation-circle" /> &ensp; Dikkat: Bu döviz
+            çevirici, piyasadaki ortalama kur oranlarını yansıtmaktadır. <br />
+            Gerçek işlem oranları değişiklik gösterebilir.
+          </Typography>
+
+        </div>
+      )}
+      {error && (
+        <div className="mt-4 text-lg font-medium text-right text-red-600">
+          {error}
         </div>
       )}
     </div>

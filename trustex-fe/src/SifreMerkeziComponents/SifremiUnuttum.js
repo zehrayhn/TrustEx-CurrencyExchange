@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
 import { Button, FormControl, FormLabel, OutlinedInput, Snackbar, Alert, Container, Paper, Typography, Grid } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
 
 function SifremiUnuttum() {
   const [email, setEmail] = useState("");
   const [errorMessages, setErrorMessages] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const navigate = useNavigate();
+
 
   const handleFetchError = (res) => {
     return res.json().then((json) => {
@@ -31,7 +32,7 @@ function SifremiUnuttum() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email }) // Wrap email in an object and stringify
+      body: email,
     })
       .then((res) => {
         if (!res.ok) {
@@ -39,7 +40,6 @@ function SifremiUnuttum() {
         }
         setSuccessMessage("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.");
         setSnackbarOpen(true);
-        navigate('/reset-password'); // Navigate on success
       })
       .catch((err) => {
         setErrorMessages([err.message || "Bir hata oluştu"]);
@@ -49,6 +49,7 @@ function SifremiUnuttum() {
   return (
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} sx={{ padding: 4 }}>
+
         <Typography variant="h5" gutterBottom>
           Şifremi Unuttum
         </Typography>
@@ -66,12 +67,7 @@ function SifremiUnuttum() {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Button 
-                type="submit"
-                variant="contained"
-                fullWidth
-                sx={{ backgroundColor: '#0033a8', color: '#fff' }}
-              >
+              <Button type="submit" variant="contained" sx={{ backgroundColor: '#031a55', color: '#ffffff', '&:hover': { backgroundColor: '#012a40', } }} fullWidth>
                 Şifremi Sıfırla
               </Button>
             </Grid>
@@ -99,5 +95,4 @@ function SifremiUnuttum() {
     </Container>
   );
 }
-
 export default SifremiUnuttum;

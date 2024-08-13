@@ -14,7 +14,7 @@ function ResetPassword() {
 
     const handleResetPassword = async () => {
         try {
-            const response = await axios.put('http://localhost:9090/auth/reset-password', 
+            const response = await axios.put('http://localhost:9090/auth/reset-password',
                 { password: newPassword, confirmPassword: confirmPassword },
                 {
                     params: { token },
@@ -38,7 +38,7 @@ function ResetPassword() {
     return (
         <Container component="main" maxWidth="xs">
             <Paper elevation={3} sx={{ padding: 10 }}>
-                <Typography variant="h5" gutterBottom >
+                <Typography variant="h5" gutterBottom>
                     Şifre Sıfırlama
                 </Typography>
                 <form onSubmit={(e) => { e.preventDefault(); handleResetPassword(); }}>
@@ -73,7 +73,6 @@ function ResetPassword() {
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                sx={{ backgroundColor: '#0033a8', color: '#fff' }}
                             >
                                 Şifreyi Sıfırla
                             </Button>

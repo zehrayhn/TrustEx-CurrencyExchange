@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import {
   MDBNavbar,
   MDBContainer,
@@ -12,39 +12,35 @@ import {
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/logo.png';
 
-function  NavbarProfilBirey() {
-  const [openNavColor, setOpenNavColor] = useState(false); 
+function NavbarProfilBirey() {
+  const [openNavColor, setOpenNavColor] = useState(false);
   const navigate = useNavigate();
 
   const handlegirisClick = () => {
-    navigate('/bireysel-giris');
+    navigate('/hesap-ozetim');
   };
-  
   const handleBMOLClick = () => {
     navigate('/bireysel-musteri-ol');
   };
-
-
-
-  const handleLogoClick = () => {
-    navigate('/'); 
+  const handleprofilClick = () => {
+    navigate('/profil-birey');
   };
- 
+
+
   return (
     <MDBNavbar expand='lg' dark style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000, backgroundColor: '#031a55' }}>
       <MDBContainer fluid>
-        <img 
-          src={logo} 
-          alt="Logo" 
-          style={{ height: '50px', marginLeft: '0px', cursor: 'pointer' }} 
-          onClick={handleLogoClick} 
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ height: '50px', marginLeft: '0px', cursor: 'pointer' }}
         />
         <MDBNavbarToggler
           type='button'
           aria-controls='navbarColor01'
-          aria-expanded={openNavColor} 
+          aria-expanded={openNavColor}
           aria-label='Toggle navigation'
-          onClick={() => setOpenNavColor(!openNavColor)}  
+          onClick={() => setOpenNavColor(!openNavColor)}
         >
           <MDBIcon icon='bars' fas />
         </MDBNavbarToggler>
@@ -55,8 +51,8 @@ function  NavbarProfilBirey() {
                 Ana Sayfa
               </MDBNavbarLink>
             </MDBNavbarItem>
-            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '1800px'}}>
-              <MDBNavbarLink onClick={handleBMOLClick} style={{ color: 'white' }}>
+            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '1800px' }}>
+              <MDBNavbarLink onClick={handleprofilClick} style={{ color: 'white' }}>
                 Profil
               </MDBNavbarLink>
             </MDBNavbarItem>

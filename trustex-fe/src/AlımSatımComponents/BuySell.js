@@ -10,10 +10,10 @@ export default function BuySellToggle() {
   const [view, setView] = useState('buy');
   const [exchangeRate, setExchangeRate] = useState(null);
   const location = useLocation();
-  const {currencyCode} = location.state || {};
+  const { currencyCode } = location.state || {};
 
   return (
-    
+
     <Box
       sx={{
         position: 'absolute',
@@ -75,7 +75,7 @@ export default function BuySellToggle() {
           borderRadius: '6px',
         }}
       >
-        {view === 'buy' ? <Buy exchangeRate={exchangeRate} currencyCode={currencyCode} /> : view === 'sell' ? <Sell exchangeRate={exchangeRate} currencyCode={currencyCode}/> : <Buy />}
+        {view === 'buy' ? <Buy exchangeRate={exchangeRate} currencyCode={currencyCode} /> : view === 'sell' ? <Sell exchangeRate={exchangeRate} currencyCode={currencyCode} /> : <Buy />}
       </Box>
     </Box>
   );

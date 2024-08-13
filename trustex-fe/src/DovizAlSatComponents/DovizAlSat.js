@@ -15,6 +15,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import Komisyon from './Komisyon';
 import { Link, useNavigate } from 'react-router-dom';
+import backgroundImage from '../images/backgroundsp.jpg';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -74,8 +75,7 @@ export default function DovizAlSat() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [currencies ,setCurrencies] = React.useState([]);
-  //const navigate = useNavigate();
+  const [currencies, setCurrencies] = React.useState([]);
   function createData(code, name, currencyType, buyRate, sellRate) {
     return { code, name, currencyType, buyRate, sellRate };
   }
@@ -83,7 +83,7 @@ export default function DovizAlSat() {
   React.useEffect(() => {
     const fetchCurrencies = async () => {
       try {
-        const response = await fetch('/api/v1/exchange-rates/getExchangeRates');
+        const response = await fetch('/api/v1/exchange-rates/getExchangeRates', { headers: { "Authorization": localStorage.getItem("tokenKey") } });
         if (!response.ok) {
           throw new Error('Failed to fetch exchange rate');
         }
@@ -117,7 +117,7 @@ export default function DovizAlSat() {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setPage(0); // Reset to the first page on search
+    setPage(0);
   };
 
   function digitSetting(x) {
@@ -128,124 +128,130 @@ export default function DovizAlSat() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        p: 2,
-        mt: '5%' // Add top margin of 10%
-      }}
-    >
-      <Box sx={{ width: '50%', mb: 2 }}>
-        <TextField
-          fullWidth
-          variant="outlined"
-          label="Doviz Ara"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </Box>
-
-      <Sheet
-        variant="outlined"
+    <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '97.4vh' }}>
+      <Box
         sx={{
-          width: '50%',
-          '--TableCell-height': '40px',
-          '--TableHeader-height': 'calc(1 * var(--TableCell-height))',
-          '--Table-firstColumnWidth': '80px',
-          '--Table-lastColumnWidth': '144px',
-          '--TableRow-stripeBackground': 'rgba(0 0 0 / 0.04)',
-          '--TableRow-hoverBackground': 'rgba(0 0 0 / 0.08)',
-          overflow: 'hidden',
-          backgroundColor: 'background.surface',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: 2,
+          mt: '5%'
         }}
       >
-        <TableContainer component={Paper}>
-          <Table
-            borderAxis="bothBetween"
-            stripe="odd"
-            hoverRow
-            sx={{
-              '& tr > *:first-child': {
-                position: 'sticky',
-                left: 0,
-                boxShadow: '1px 0 var(--TableCell-borderColor)',
-                bgcolor: 'background.surface',
-              },
-              '& tr > *:last-child': {
-                position: 'sticky',
-                right: 0,
-                bgcolor: 'var(--TableCell-headBackground)',
-              },
-            }}
-          >
-            <thead>
-              <tr>
-                <th style={{ width: 'var(--Table-firstColumnWidth)' }}>Döviz Cinsi</th>
-                <th style={{ width: 150 }}>Döviz Ismi</th>
-                <th style={{ width: 150 }}>Satış Kuru</th>
-                <th style={{ width: 150 }}>Alış Kuru</th>
-                
-                <th style={{ width: 'var(--Table-lastColumnWidth)' }}>
-                  &ensp;&ensp;Al &ensp;&ensp;&ensp;&ensp;Sat &ensp;
-                </th>
-              </tr>
-            </thead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : filteredRows
-              ).map((row) => (
-                <React.Fragment key={row.name}>
-                  <tr>
-                    <td>{row.currencyCode}</td>
-                    <td>{row.currencyLabelTR}</td>
-                    <td>{digitSetting(1/row.buyRate)}</td>
-                    <td>{digitSetting(1/row.sellRate)}</td>
-                    <td>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Link
-                          to="/transaction"
-                          state={{ currencyCode: row.currencyCode }}
-                        >
-                          <Button size="sm" variant="solid" color="success"  >
-                            AL
-                          </Button></Link>
-                        <Button size="sm" variant="soft" color="danger">
-                          SAT
-                        </Button>
-                      </Box>
-                    </td>
-                  </tr>
-                </React.Fragment>
-              ))}
+        <Box sx={{ width: '50%', mb: 2 }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Doviz Ara"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </Box>
 
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={5} />
+        <Sheet
+          variant="outlined"
+          sx={{
+            width: '50%',
+            '--TableCell-height': '40px',
+            '--TableHeader-height': 'calc(1 * var(--TableCell-height))',
+            '--Table-firstColumnWidth': '80px',
+            '--Table-lastColumnWidth': '144px',
+            '--TableRow-stripeBackground': 'rgba(0 0 0 / 0.04)',
+            '--TableRow-hoverBackground': 'rgba(0 0 0 / 0.08)',
+            overflow: 'hidden',
+            backgroundColor: 'background.surface',
+          }}
+        >
+          <TableContainer component={Paper}>
+            <Table
+              borderAxis="bothBetween"
+              stripe="odd"
+              hoverRow
+              sx={{
+                '& tr > *:first-child': {
+                  position: 'sticky',
+                  left: 0,
+                  boxShadow: '1px 0 var(--TableCell-borderColor)',
+                  bgcolor: 'background.surface',
+                },
+                '& tr > *:last-child': {
+                  position: 'sticky',
+                  right: 0,
+                  bgcolor: 'var(--TableCell-headBackground)',
+                },
+              }}
+            >
+              <thead>
+                <tr>
+                  <th style={{ width: 'var(--Table-firstColumnWidth)' }}>Döviz Cinsi</th>
+                  <th style={{ width: 150 }}>Döviz Ismi</th>
+                  <th style={{ width: 150 }}>Satış Kuru</th>
+                  <th style={{ width: 150 }}>Alış Kuru</th>
+
+                  <th style={{ width: 'var(--Table-lastColumnWidth)' }}>
+                    &ensp;&ensp;Al &ensp;&ensp;&ensp;&ensp;Sat &ensp;
+                  </th>
+                </tr>
+              </thead>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  : filteredRows
+                ).map((row) => (
+                  <React.Fragment key={row.name}>
+                    <tr>
+                      <td>{row.currencyCode}</td>
+                      <td>{row.currencyLabelTR}</td>
+                      <td>{digitSetting(1 / row.buyRate)}</td>
+                      <td>{digitSetting(1 / row.sellRate)}</td>
+                      <td>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Link
+                            to="/transaction"
+                            state={{ currencyCode: row.currencyCode }}
+                          >
+                            <Button size="sm" variant="solid" color="success"  >
+                              AL
+                            </Button></Link>
+                          <Link
+                            to="/transaction"
+                            state={{ currencyCode: row.currencyCode }}
+                          ><Button size="sm" variant="soft" color="danger">
+                              SAT
+                            </Button>
+                          </Link>
+                        </Box>
+                      </td>
+                    </tr>
+                  </React.Fragment>
+                ))}
+
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={5} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[5]}
+                    colSpan={5}
+                    count={filteredRows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
                 </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5]}
-                  colSpan={5}
-                  count={filteredRows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
-      </Sheet>
-      <Komisyon />
-    </Box>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </Sheet>
+        <Komisyon />
+      </Box>
+    </div>
   );
 }

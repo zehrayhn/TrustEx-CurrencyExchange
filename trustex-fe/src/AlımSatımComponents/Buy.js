@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button, Grid, Typography, InputAdornment, Slider, Box } from '@mui/material';
 
-const Buy = ({ exchangeRate,currencyCode }) => {
+const Buy = ({ exchangeRate, currencyCode }) => {
   const [amount, setAmount] = useState('');
   const [assets, setAssets] = useState();
-  
+
 
 
   const handleAmountChange = (event) => {
@@ -12,7 +12,7 @@ const Buy = ({ exchangeRate,currencyCode }) => {
   };
 
   const handleSliderChange = (event, newValue) => {
-    setAmount((newValue * (1/exchangeRate.buyRate)).toFixed(3));
+    setAmount((newValue * (1 / exchangeRate.buyRate)).toFixed(3));
   };
   function digitSetting(x) {
     return Number.parseFloat(x).toFixed(6);
@@ -21,7 +21,7 @@ const Buy = ({ exchangeRate,currencyCode }) => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await fetch('/api/v1/assets/user/1/TRY');
+        const response = await fetch('/api/v1/assets/user/' + localStorage.getItem("currentUser") + '/TRY', { headers: { "Authorization": localStorage.getItem("tokenKey") } });
         if (!response.ok) {
           throw new Error('Failed to fetch exchange rate');
         }
@@ -46,19 +46,19 @@ const Buy = ({ exchangeRate,currencyCode }) => {
       const response = await fetch('/api/v1/transactions/buySell', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json', "Authorization": localStorage.getItem("tokenKey")
         },
         body: JSON.stringify(transactionRequest),
       });
 
       if (!response.ok) {
-        alert('Transaction failed');
+        alert('İşlem Başarısız. Bakiyenizi Kontrol Edin.');
         throw new Error('Something went wrong');
       }
 
       const data = await response.json();
       console.log('Transaction successful:', data);
-      alert('Transaction successful:');
+      alert('İşlem Başarılı:');
       window.location.reload();
     } catch (error) {
       console.error('Error:', error);
@@ -75,7 +75,7 @@ const Buy = ({ exchangeRate,currencyCode }) => {
   return (
     <Box p={3} sx={{ backgroundColor: 'white', borderRadius: 2 }}>
       <Typography variant="h5" gutterBottom align="center" color={'black'}>
-        {exchangeRate.currencyLabelTR} 
+        {exchangeRate.currencyLabelTR}
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
@@ -83,7 +83,7 @@ const Buy = ({ exchangeRate,currencyCode }) => {
             fullWidth
             variant="filled"
             label="Exchange Rate"
-            value={digitSetting(1/exchangeRate.buyRate)}
+            value={digitSetting(1 / exchangeRate.buyRate)}
             InputProps={{
               readOnly: true,
               endAdornment: <InputAdornment position="end">TRY</InputAdornment>,
@@ -127,16 +127,16 @@ const Buy = ({ exchangeRate,currencyCode }) => {
           />
         </Grid>
         <Grid item xs={12} color={'black'}>
-          <Typography>Kambiyo vergisi:{digitSetting(0.002*(amount* (1/exchangeRate.buyRate)))}</Typography>
-          <Typography>Komisyon (TRY): {digitSetting(0.01*(amount* (1/exchangeRate.buyRate)))}</Typography>
-          <Typography>Toplam Tutar (TRY): {digitSetting((0.002*(amount* (1/exchangeRate.buyRate))) + (0.01*(amount* (1/exchangeRate.buyRate))) + (amount* (1/exchangeRate.buyRate)))}</Typography>
-          <Typography>Kalan KullanÄ±labilir Bakiye (TRY): {digitSetting(assets.amount - ((0.002*(amount* (1/exchangeRate.buyRate))) + (0.01*(amount* (1/exchangeRate.buyRate))) + (amount* (1/exchangeRate.buyRate))))}</Typography>
+          <Typography>Kambiyo vergisi:{digitSetting(0.002 * (amount * (1 / exchangeRate.buyRate)))}</Typography>
+          <Typography>Komisyon (TRY): {digitSetting(0.01 * (amount * (1 / exchangeRate.buyRate)))}</Typography>
+          <Typography>Toplam Tutar (TRY): {digitSetting((0.002 * (amount * (1 / exchangeRate.buyRate))) + (0.01 * (amount * (1 / exchangeRate.buyRate))) + (amount * (1 / exchangeRate.buyRate)))}</Typography>
+          <Typography>Kalan KullanÄ±labilir Bakiye (TRY): {digitSetting(assets.amount - ((0.002 * (amount * (1 / exchangeRate.buyRate))) + (0.01 * (amount * (1 / exchangeRate.buyRate))) + (amount * (1 / exchangeRate.buyRate))))}</Typography>
         </Grid>
         <Grid item xs={12}>
-          <Button 
-            fullWidth 
-            variant="contained" 
-            color="success" 
+          <Button
+            fullWidth
+            variant="contained"
+            color="success"
             sx={{ padding: 1.5 }}
             onClick={handleBuyNow}
           >

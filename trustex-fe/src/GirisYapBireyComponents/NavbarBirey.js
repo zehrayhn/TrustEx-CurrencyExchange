@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import {
   MDBNavbar,
   MDBContainer,
@@ -12,41 +12,41 @@ import {
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/logo.png';
 
-function Navbar() {
-  const [openNavColor, setOpenNavColor] = useState(false); 
+function NavbarBirey() {
+  const [openNavColor, setOpenNavColor] = useState(false);
   const navigate = useNavigate();
 
   const handlegirisClick = () => {
     navigate('/bireysel-giris');
   };
-  
+
   const handleBMOLClick = () => {
     navigate('/bireysel-musteri-ol');
   };
 
   const handlesifre2Click = () => {
-    navigate('/sifre-merkezi'); 
+    navigate('/sifre-merkezi');
   };
 
   const handleLogoClick = () => {
-    navigate('/'); 
+    navigate('/');
   };
- 
+
   return (
     <MDBNavbar expand='lg' dark style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000, backgroundColor: '#031a55' }}>
       <MDBContainer fluid>
-        <img 
-          src={logo} 
-          alt="Logo" 
-          style={{ height: '50px', marginLeft: '575px', cursor: 'pointer' }} 
-          onClick={handleLogoClick} 
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ height: '50px', marginLeft: '575px', cursor: 'pointer' }}
+          onClick={handleLogoClick}
         />
         <MDBNavbarToggler
           type='button'
           aria-controls='navbarColor01'
-          aria-expanded={openNavColor} 
+          aria-expanded={openNavColor}
           aria-label='Toggle navigation'
-          onClick={() => setOpenNavColor(!openNavColor)}  
+          onClick={() => setOpenNavColor(!openNavColor)}
         >
           <MDBIcon icon='bars' fas />
         </MDBNavbarToggler>
@@ -57,13 +57,13 @@ function Navbar() {
                 Giriş Yap/Şifre Oluştur
               </MDBNavbarLink>
             </MDBNavbarItem>
-            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '950px'}}>
+            <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '950px' }}>
               <MDBNavbarLink onClick={handleBMOLClick} style={{ color: 'white' }}>
                 Bireysel Müşteri Ol
               </MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem style={{ position: 'absolute', top: '12px', left: '1125px' }}>
-              <MDBNavbarLink  onClick={handlesifre2Click} style={{ color: 'white' }}>
+              <MDBNavbarLink onClick={handlesifre2Click} style={{ color: 'white' }}>
                 Şifre Merkezi
               </MDBNavbarLink>
             </MDBNavbarItem>
@@ -74,4 +74,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default NavbarBirey;
