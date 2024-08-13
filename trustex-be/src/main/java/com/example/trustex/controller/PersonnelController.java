@@ -25,12 +25,11 @@ public class PersonnelController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PersonnelDto> updatePersonnel(
+    public ResponseEntity<UpdatePersonnelDto> updatePersonnel(
             @PathVariable Long id,
             @Valid @RequestBody UpdatePersonnelDto updatePersonnelDto) {
-        PersonnelDto updatedPersonnelDto = personnelService.updatePersonnel(id, updatePersonnelDto);
+        UpdatePersonnelDto updatedPersonnelDto = personnelService.updatePersonnel(id, updatePersonnelDto);
         return ResponseEntity.ok(updatedPersonnelDto);
-
 
     }
 }

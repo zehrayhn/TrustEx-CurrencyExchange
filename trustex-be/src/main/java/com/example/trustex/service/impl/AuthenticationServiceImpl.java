@@ -298,7 +298,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User currentUser=userService.getCurrentUser();
 
-            return new AuthenticationResponseDto("Bearer "+jwtToken, currentUser.getId(), "Doğrulama başarılı.");
+            return new AuthenticationResponseDto("Bearer "+jwtToken,currentUser.getId(), "Doğrulama başarılı.",currentUser.getCustomerNumber(), currentUser.getUserType());
         } else {
             throw new InvalidCredentialsException("Kod hatalı.");
         }

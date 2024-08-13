@@ -76,7 +76,9 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         List<ExchangeRateResponseDto> exchangeRateCurrencies = new ArrayList<>();
         //Getting the exchange rates from the database and setting them to the response DTO
         for (ExchangeRates exchangeRate : exchangeRateRepository.findByOrderLastDesc()) {
-            exchangeRateCurrencies.add(toDto(exchangeRate));
+            if(!(exchangeRate.getCurrency().getCurrencyCode().equals("TRY"))) {
+                exchangeRateCurrencies.add(toDto(exchangeRate));
+            }
         }
         return exchangeRateCurrencies;
     }

@@ -7,6 +7,6 @@ public interface PersonnelService {
     PersonnelDto getPersonnelById(Long id);
 
 
-    PersonnelDto updatePersonnel(Long id, UpdatePersonnelDto updatePersonnelDto);
+    UpdatePersonnelDto updatePersonnel(Long id, UpdatePersonnelDto updatePersonnelDto);
 
 }

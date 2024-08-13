@@ -106,7 +106,7 @@ public class TransferServiceImpl implements TransferService {
                     dto.setSenderId(transfer.getSender().getId());
                     dto.setReceiverCustomerNumber(transfer.getReceiver().getCorporateCustomerNumber() != null ? transfer.getReceiver().getCorporateCustomerNumber() : transfer.getReceiver().getCustomerNumber());
                     dto.setCurrencyCode(transfer.getCurrency().getCurrencyCode());
-                    dto.setTimestamp(LocalDateTime.now());
+                    dto.setTimestamp(transfer.getTimestamp());
                     dto.setAmount(transfer.getAmount());
                     dto.setStatus(transfer.getStatus());
                     dto.setMessage(transfer.getMessage());
