@@ -22,7 +22,6 @@ public class BalanceController {
     public ResponseEntity<BalanceTransactionResponseDto> addMoneyToAsset(
             @PathVariable("userId") Long userId,
             @RequestBody AddMoneyRequestDto addMoneyRequestDto) {
-        balanceService.addMoneyToAsset(userId, addMoneyRequestDto);
         return ResponseEntity.ok(balanceService.addMoneyToAsset(userId, addMoneyRequestDto));
     }
 
@@ -30,7 +29,6 @@ public class BalanceController {
     public ResponseEntity<BalanceTransactionResponseDto> withdrawMoneyFromTRYAsset(
             @PathVariable("userId") Long userId,
             @RequestBody WithdrawMoneyRequestDto withdrawMoneyRequestDto) {
-        balanceService.withdrawMoneyFromAsset(userId, withdrawMoneyRequestDto);
         return ResponseEntity.ok(balanceService.withdrawMoneyFromAsset(userId,withdrawMoneyRequestDto));
     }
 

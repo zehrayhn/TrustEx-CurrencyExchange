@@ -43,25 +43,30 @@ public class AssetsServiceImpl implements AssetsService {
         User user = userService.getUserById(userId);
         List<Assets> assets = assetsRepository.findByUser(user);
 
-        return assets.stream().map(asset -> {
-            ExchangeRates exchangeRates = exchangeRatesRepository.findNewestExchangeRateByCurrencyCode(asset.getCurrency().getCurrencyCode()).
-                    orElseThrow(()-> new RuntimeException("Currency Not Found for code: " + asset.getCurrency().getCurrencyCode()));
+        return assets.stream()
+                .filter(asset -> asset.getAmount() > 0) // Filter out assets with amount 0
+                .map(asset -> {
+                    ExchangeRates exchangeRates = exchangeRatesRepository
+                            .findNewestExchangeRateByCurrencyCode(asset.getCurrency().getCurrencyCode())
+                            .orElseThrow(() -> new RuntimeException("Currency Not Found for code: " + asset.getCurrency().getCurrencyCode()));
 
-            double valueInTL = asset.getCurrency().getCurrencyCode().equals("TRY")
-                    ? asset.getAmount()
-                    : asset.getAmount() * (1/(exchangeRates.getBuyRate()));
+                    double valueInTL = asset.getCurrency().getCurrencyCode().equals("TRY")
+                            ? asset.getAmount()
+                            : asset.getAmount() * (1 / exchangeRates.getBuyRate());
 
-            return AssetResponseDto.builder()
-                    .assetName(asset.getAssetName())
-                    .userId(userId)
-                    .currencyCode(asset.getCurrency().getCurrencyCode())
-                    .currencyLabelTR(asset.getCurrency().getCurrencyLabelTR())
-                    .amount(asset.getAmount())
-                    .avgCost(asset.getAvgCost())
-                    .lastPrice(1/exchangeRates.getSellRate())
-                    .valueInTL(valueInTL)
-                    .build();
-        }).collect(Collectors.toList());
+                    return AssetResponseDto.builder()
+                            .assetName(asset.getAssetName())
+                            .userId(userId)
+                            .currencyCode(asset.getCurrency().getCurrencyCode())
+                            .currencyLabelTR(asset.getCurrency().getCurrencyLabelTR())
+                            .amount(asset.getAmount())
+                            .buyRate(1 / exchangeRates.getBuyRate())
+                            .avgCost(asset.getAvgCost())
+                            .lastPrice(1 / exchangeRates.getSellRate())
+                            .valueInTL(valueInTL)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
 
@@ -129,8 +134,9 @@ public class AssetsServiceImpl implements AssetsService {
 
     @Override
     public AssetResponseDto getAssetByUserIdAndCurrencyCode(Long userId, String currencyCode) {
+        User user = userService.getUserById(userId);
        Assets asset = assetsRepository.findByUserAndCurrencyCode(userId, currencyCode)
-                .orElseThrow(() -> new AssetNotFoundException("Bu kullanıcı ve döviz koduna göre varlık bulunamadı: " + currencyCode));
+                .orElseGet(() -> createAssetForUser(user, currencyCode));
 
         return AssetResponseDto.builder()
                 .assetName(asset.getAssetName())
@@ -209,5 +215,18 @@ public class AssetsServiceImpl implements AssetsService {
         return assets.stream()
                 .mapToDouble(asset -> asset.getAmount() * asset.getAvgCost())
                 .sum();
+    }
+
+    private Assets createAssetForUser(User user, String currencyCode) {
+        //If no asset is found in demanded currency , create one for the user.
+        Assets newTransactionAsset = Assets.builder()
+                .assetName(currencyCode + "Wallet")
+                .amount(0.0)
+                .avgCost(0.0)
+                .currency(currencyRepository.findById(currencyCode).orElseThrow(() -> new IllegalArgumentException(currencyCode + " currency not found")))
+                .user(user)
+                .build();
+        assetsRepository.save(newTransactionAsset);
+        return newTransactionAsset;
     }
 }

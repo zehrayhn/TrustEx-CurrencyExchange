@@ -100,7 +100,7 @@ public class BalanceServiceImpl implements BalanceService {
                 .amount(request.getAmount())
                 .currencyCode(request.getCurrencyCode())
                 .timestamp(LocalDateTime.now())
-                .balanceTransactionType(BalanceTransactionType.DEPOSIT)
+                .balanceTransactionType(BalanceTransactionType.WITHDRAWAL)
                 .build();
 
     }

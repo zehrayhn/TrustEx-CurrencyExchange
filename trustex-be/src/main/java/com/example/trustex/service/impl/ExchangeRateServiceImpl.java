@@ -7,6 +7,8 @@ import com.example.trustex.entity.Currency;
 import com.example.trustex.entity.ExchangeRates;
 import com.example.trustex.exception.CurrencyNotFoundException;
 import com.example.trustex.service.ExchangeRateService;
+import com.example.trustex.util.AppConstants;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import static com.example.trustex.util.AppConstants.API_KEY;
+import static com.example.trustex.util.AppConstants.BASE_CODE;
 
 @Service
 @RequiredArgsConstructor
@@ -28,14 +32,12 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final ExchangeRatesRepository exchangeRateRepository;
     private final CurrencyRepository currencyRepository;
 
-    private final static String BASE_CODE = "TRY";
-    private final static String API_KEY = "5c1ad86e9d25c95e17955a19";
-
     //Scheduled task to get exchange rates from the external API
+    @Transactional
     @Scheduled(cron = "0 1 * * * ?") //
     public String getExchangeRateFromApi() {
         //Requests to external API to get exchange rates
-        String url = "https://v6.exchangerate-api.com/v6/"+API_KEY+"/latest/"+BASE_CODE;
+        String url = "https://v6.exchangerate-api.com/v6/"+ API_KEY +"/latest/"+ BASE_CODE;
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
         if(response != null && response.get("error") != null) {
             throw new RuntimeException("Error in getting exchange rates from the API");

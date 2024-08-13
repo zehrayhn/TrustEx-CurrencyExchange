@@ -13,6 +13,7 @@ public class AssetResponseDto {
     private String currencyLabelTR;
     private Double amount;
     private Double avgCost;
+    private Double buyRate;
     private Double lastPrice;
     private Double valueInTL;
 
