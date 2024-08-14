@@ -1,8 +1,8 @@
 package com.example.trustex.dto;
 
 import com.example.trustex.entity.UserType;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDate;
 

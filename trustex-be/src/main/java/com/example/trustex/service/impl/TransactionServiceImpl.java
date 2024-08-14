@@ -144,7 +144,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .commissionAmount(commission)
                 .foreignExchangeTax(foreignExchangeTax)
                 .targetCurrency(targetCurrency)
-                .total(total)///Degistirilefcek
+                .total(total)
                 .build();
     }
 
@@ -166,7 +166,7 @@ public class TransactionServiceImpl implements TransactionService {
         } else if (amount > 2000000) {
             return 0.0008; // %0.08
         } else {
-            return 0.0; // Return 0 if the amount is negative or doesn't fall into any range
+            return 0.0;
         }
     }
 

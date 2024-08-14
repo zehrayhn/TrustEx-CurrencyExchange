@@ -22,7 +22,7 @@ export const fetchTransactions = async (userId) => {
 
 
 export const fetchUserSentTransfers = async (userId) => {
-    const token = getToken();
+
 
     const response = await fetch(`${API_BASE_URL}/transfers/user/${userId}/sent`, {
         headers: {
@@ -38,8 +38,6 @@ export const fetchUserSentTransfers = async (userId) => {
 };
 
 export const postTransfer = async (transferData) => {
-    const token = getToken();
-    const userId = getUserId();
 
     const response = await fetch(`${API_BASE_URL}/transfers`, {
         method: 'POST',
@@ -58,7 +56,7 @@ export const postTransfer = async (transferData) => {
 };
 
 export const addMoney = async (amount, currencyCode) => {
-    const token = getToken();
+  
     const userId = getUserId();
 
     const response = await fetch(`${API_BASE_URL}/users/${userId}/add-money`, {
@@ -78,7 +76,7 @@ export const addMoney = async (amount, currencyCode) => {
 };
 
 export const withdrawMoney = async (amount, currencyCode, iban, swiftCode) => {
-    const token = getToken();
+    
     const userId = getUserId();
 
     const response = await fetch(`${API_BASE_URL}/users/${userId}/withdraw-money`, {

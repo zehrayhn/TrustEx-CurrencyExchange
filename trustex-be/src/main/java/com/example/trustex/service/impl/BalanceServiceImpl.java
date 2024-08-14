@@ -77,9 +77,6 @@ public class BalanceServiceImpl implements BalanceService {
 
         validateCurrencyCode(request.getCurrencyCode());
 
-        Currency currency = currencyRepository.findByCurrencyCode(request.getCurrencyCode().name())
-                .orElseThrow(() -> new IllegalArgumentException("Döviz bulunamadı"));
-
         Assets asset = user.getAssets().stream()
                 .filter(a -> a.getCurrency().getCurrencyCode().equals(request.getCurrencyCode().name()))
                 .findFirst()

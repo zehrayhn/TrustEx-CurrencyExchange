@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const AssetsCard = ({ title, changePercent, changeValue, totalValue, quantity, cost, lastPrice, totalAssetsValue }) => {
-  const percentageOfTotalAssets = (totalValue / totalAssetsValue) * 100;
+  
 
   return (
     <div style={styles.cardContainer}>

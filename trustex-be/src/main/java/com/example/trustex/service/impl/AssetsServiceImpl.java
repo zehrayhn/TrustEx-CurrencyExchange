@@ -189,11 +189,6 @@ public class AssetsServiceImpl implements AssetsService {
         return assetsRepository.findByUserAndCurrency(user, currency);
     }
 
-/*    @Override
-    public Optional<Assets> findByUserAndCurrency(User user, Currency currency) {
-        return assetsRepository.findByUserAndCurrency(user, currency);
-    }*/
-
     @Override
     public double getTotalAssetValueByUser(User user) {
         List<Assets> assets = assetsRepository.findByUser(user);

@@ -3,7 +3,6 @@ package com.example.trustex.dto;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor

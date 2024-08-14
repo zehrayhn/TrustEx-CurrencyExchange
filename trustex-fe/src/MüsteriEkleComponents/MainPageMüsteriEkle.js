@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { Container, Grid, Typography, Button, TextField, Snackbar, Alert } from '@mui/material';
-import { MDBBtn, MDBInput, MDBCheckbox } from 'mdb-react-ui-kit';
+import { Container, Grid, Typography, Button,  Snackbar, Alert } from '@mui/material';
+import {  MDBInput } from 'mdb-react-ui-kit';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CountrySelect from 'react-bootstrap-country-select';
 import 'react-bootstrap-country-select/dist/react-bootstrap-country-select.css';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import {   useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/backgroundsp.jpg';
 
 
 
 export default function MainPageMüsteriEkle() {
-  const [checked, setChecked] = useState(false);
+
   const [startDate, setStartDate] = useState(new Date());
   const [selectedCountry, setSelectedCountry] = useState(null);
   const minDate = new Date('1900-01-01');

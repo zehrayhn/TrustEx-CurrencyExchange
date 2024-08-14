@@ -19,9 +19,7 @@ function NavbarAssets() {
   const handlegirisClick = () => {
     navigate('/hesap-ozetim');
   };
-  const handleBMOLClick = () => {
-    navigate('/bireysel-musteri-ol');
-  };
+
   const handleprofilClick = () => {
     navigate('/profil-birey');
   };

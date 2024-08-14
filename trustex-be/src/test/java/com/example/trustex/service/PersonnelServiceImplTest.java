@@ -8,6 +8,7 @@ import com.example.trustex.dto.converter.UpdatePersonnelDtoConverter;
 import com.example.trustex.entity.User;
 import com.example.trustex.exception.BusinessException;
 import com.example.trustex.service.impl.PersonnelServiceImpl;
+import org.hibernate.sql.Update;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,9 +33,33 @@ public class PersonnelServiceImplTest {
     private UserService userService;
     @InjectMocks
     private PersonnelServiceImpl personnelService;
+    private  UpdatePersonnelDto updatePersonnelDto;
+    private User user;
+    private  PersonnelDto personnelDto;
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        user = new User();
+        user.setEmail("test@example.com");
+        user.setFirstname("John");
+        user.setLastname("Doe");
+        user.setCountry("Country");
+        user.setIdNumber("123456");
+        user.setMobilePhone("1234567890");
+        user.setDateOfBirth(null);
+
+        updatePersonnelDto = new UpdatePersonnelDto();
+        updatePersonnelDto.setEmail("newemail@example.com");
+        updatePersonnelDto.setMobilePhone("0987654321");
+
+        personnelDto = new PersonnelDto();
+        personnelDto.setFirstname("John");
+        personnelDto.setLastname("Doe");
+        personnelDto.setCountry("Country");
+        personnelDto.setIdNumber("123456");
+        personnelDto.setEmail("test@example.com");
+        personnelDto.setMobilePhone("1234567890");
+        personnelDto.setDateOfBirth("01-01-2000");
     }
     @Test
     public void testGetPersonnelById_Success() {
@@ -71,18 +96,17 @@ public class PersonnelServiceImplTest {
     @Test
     public void testUpdatePersonnel_Success() {
         Long id = 1L;
-        User user = new User();
-        UpdatePersonnelDto updatePersonnelDto = new UpdatePersonnelDto();
-        UpdatePersonnelDto updatedDto = new UpdatePersonnelDto();
+        updatePersonnelDto.setEmail("example@example.com");
+
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(userService.existsByEmail(updatePersonnelDto.getEmail())).thenReturn(false);
-        when(updatePersonnelDtoConverter.convertToDto(user)).thenReturn(updatedDto);
+        when(updatePersonnelDtoConverter.convertToDto(user)).thenReturn(updatePersonnelDto);
 
         UpdatePersonnelDto result = personnelService.updatePersonnel(id, updatePersonnelDto);
 
         assertNotNull(result);
-        assertEquals(updatedDto, result);
+        assertEquals(updatePersonnelDto, result);
         verify(userRepository, times(1)).findById(id);
         verify(userService, times(1)).existsByEmail(updatePersonnelDto.getEmail());
         verify(updatePersonnelDtoConverter, times(1)).updatePersonnelFromDto(user, updatePersonnelDto);
@@ -92,8 +116,9 @@ public class PersonnelServiceImplTest {
     @Test
     public void testUpdatePersonnel_EmailConflict() {
         Long id = 1L;
-        User user = new User();
-        UpdatePersonnelDto updatePersonnelDto = new UpdatePersonnelDto();
+        updatePersonnelDto.setEmail("conflict@example.com");
+
+
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(userService.existsByEmail(updatePersonnelDto.getEmail())).thenReturn(true);

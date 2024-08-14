@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MDBBtn, MDBInput, MDBCheckbox, MDBBtnGroup } from 'mdb-react-ui-kit';
+import { MDBBtn, MDBBtnGroup, MDBInput } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { Container, Grid, Typography, Button, Snackbar, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -16,7 +16,7 @@ export default function MainPageBirey({ }) {
   const [showVerificationField, setShowVerificationField] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [setIsIndividual] = useState(true);
-  const [checked, setChecked] = useState(false);
+
   const navigate = useNavigate();
   const handlegirisClick = () => {
     navigate('/bireysel-giris');

@@ -49,7 +49,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private static final int EXPIRATION_TIME_IN_HOURS = 1;
     @Override
     public AuthenticationResponseDto register(RegisterRequestDto request) {
-       // request.setUserType(UserType.INDIVIDUAL);
 
         if(userService.existsByEmail(request.getEmail())){
             throw new BusinessException(HttpStatus.CONFLICT,Collections.singletonList("Bu Email kullanılmaktadır."));

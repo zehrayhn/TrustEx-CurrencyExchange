@@ -30,9 +30,7 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private static final Logger logger = LogManager.getLogger(SecurityConfig.class);
     private static final String[] WHITE_LIST_URL = {"/auth/**",
-            "/v2/api-docs",
-            "/v3/api-docs",
-            "/v3/api-docs/**",
+
             "/swagger-resources",
             "/swagger-resources/**",
             "/swagger-ui.html",
@@ -40,7 +38,6 @@ public class SecurityConfig {
             "/configuration/security",
             "/swagger-ui/**",
             "/authPage/register",
-            "/webjars/**",
             "/actuator/health/**",
             "/actuator/health/readiness",
             "/authPage/login",
@@ -62,8 +59,36 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors((AbstractHttpConfigurer::disable))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/register", "/auth/login", "/","/auth/verify","/auth/verify-code","/auth/send-verification-code","/auth/verify/**","/api/v1/currencies/getAllCurrencies","/api/v1/convert",
-                                "/auth/verify-and-authenticate","/auth/forgot-password","/auth/verify?token=", "/auth/reset-password/**","/auth/reset-password","/api/personnel-customer","/api/v1/personnel-customers/**","/api/v1/exchange-rates/getMain").permitAll()
+                        .requestMatchers(
+                                "/auth/register",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/swagger-ui.html",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/auth/login",
+                                "/auth/verify",
+                                "/login",
+                                "/verify",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/v2/api-docs",
+                                "/",
+                                "/auth/verify-code",
+                                "/auth/send-verification-code",
+                                "/auth/verify/**",
+                                "/api/v1/currencies/getAllCurrencies",
+                                "/api/v1/convert",
+                                "/auth/verify-and-authenticate",
+                                "/auth/forgot-password",
+                                "/auth/verify?token=",
+                                "/auth/reset-password/**",
+                                "/auth/reset-password",
+                                "/api/personnel-customer",
+                                "/api/v1/personnel-customers/**",
+                                "/api/v1/exchange-rates/getMain"
+                        ).permitAll()
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers(HttpMethod.POST,"/trustex/supports").hasAuthority("ROLE_USER")
                         .requestMatchers(HttpMethod.GET,"/trustex/support").hasAuthority("ROLE_USER")
