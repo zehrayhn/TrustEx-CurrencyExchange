@@ -22,7 +22,7 @@ export default function MainPageProfilBirey() {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const navigate = useNavigate();
-  const id = 1;  
+  const id = localStorage.getItem('currentUser');  
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
@@ -50,7 +50,7 @@ export default function MainPageProfilBirey() {
   };
 
   useEffect(() => {
-    axios.get('api/v1/personnels/${id}')
+    axios.get(`api/v1/personnels/${id}`, { headers: { "Authorization": localStorage.getItem("tokenKey") } })
       .then(response => {
         const personnelData = response.data;
         setFirstname(personnelData.firstname);
@@ -75,6 +75,13 @@ export default function MainPageProfilBirey() {
   };
 
   const handleçıkışClick = () => {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("tokenKey");
+    localStorage.removeItem("customerNumber");
+    localStorage.removeItem("selectedCustomerNumber");
+    localStorage.removeItem("userPassword");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("selectedUserId");
     navigate('/');
   };
 
@@ -85,7 +92,11 @@ export default function MainPageProfilBirey() {
       mobilePhone,
     };
 
-    axios.put('api/v1/personnels/${id}', updatedData)
+    axios.put(`api/v1/personnels/${id}`, {
+      updatedData,
+      headers: {
+         "Authorization": localStorage.getItem("tokenKey")  ,
+      }})
       .then(response => {
         console.log('Başarıyla güncellendi:', response.data);
         handleFetchSuccess('Profil başarıyla güncellendi.');

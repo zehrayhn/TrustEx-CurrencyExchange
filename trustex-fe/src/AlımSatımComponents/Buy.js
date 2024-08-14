@@ -21,7 +21,7 @@ const Buy = ({ exchangeRate, currencyCode }) => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await fetch('/api/v1/assets/user/' + localStorage.getItem("currentUser") + '/TRY', { headers: { "Authorization": localStorage.getItem("tokenKey") } });
+        const response = await fetch('/api/v1/assets/user/' + localStorage.getItem("selectedUserId") + '/TRY', { headers: { "Authorization": localStorage.getItem("tokenKey") } });
         if (!response.ok) {
           throw new Error('Failed to fetch exchange rate');
         }
@@ -36,7 +36,7 @@ const Buy = ({ exchangeRate, currencyCode }) => {
 
   const handleBuyNow = async () => {
     const transactionRequest = {
-      userId: 1,
+      userId: localStorage.getItem("selectedUserId"),
       targetCurrencyCode: currencyCode,
       transactionType: 'BUY',
       amount: parseFloat(amount),
@@ -82,7 +82,7 @@ const Buy = ({ exchangeRate, currencyCode }) => {
           <TextField
             fullWidth
             variant="filled"
-            label="Exchange Rate"
+            label="Döviz Kuru"
             value={digitSetting(1 / exchangeRate.buyRate)}
             InputProps={{
               readOnly: true,
@@ -94,7 +94,7 @@ const Buy = ({ exchangeRate, currencyCode }) => {
           <TextField
             fullWidth
             variant="filled"
-            label="Available Balance"
+            label="Kullanılabilir Bakiye"
             value={digitSetting(assets.amount)}
             InputProps={{
               readOnly: true,
@@ -106,7 +106,7 @@ const Buy = ({ exchangeRate, currencyCode }) => {
           <TextField
             fullWidth
             variant="outlined"
-            label="Amount to Buy"
+            label="Alınacak Miktar"
             value={amount}
             onChange={handleAmountChange}
             InputProps={{
@@ -130,7 +130,7 @@ const Buy = ({ exchangeRate, currencyCode }) => {
           <Typography>Kambiyo vergisi:{digitSetting(0.002 * (amount * (1 / exchangeRate.buyRate)))}</Typography>
           <Typography>Komisyon (TRY): {digitSetting(0.01 * (amount * (1 / exchangeRate.buyRate)))}</Typography>
           <Typography>Toplam Tutar (TRY): {digitSetting((0.002 * (amount * (1 / exchangeRate.buyRate))) + (0.01 * (amount * (1 / exchangeRate.buyRate))) + (amount * (1 / exchangeRate.buyRate)))}</Typography>
-          <Typography>Kalan KullanÄ±labilir Bakiye (TRY): {digitSetting(assets.amount - ((0.002 * (amount * (1 / exchangeRate.buyRate))) + (0.01 * (amount * (1 / exchangeRate.buyRate))) + (amount * (1 / exchangeRate.buyRate))))}</Typography>
+          <Typography>Kalan Kullanılabilir Bakiye (TRY): {digitSetting(assets.amount - ((0.002 * (amount * (1 / exchangeRate.buyRate))) + (0.01 * (amount * (1 / exchangeRate.buyRate))) + (amount * (1 / exchangeRate.buyRate))))}</Typography>
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -140,7 +140,7 @@ const Buy = ({ exchangeRate, currencyCode }) => {
             sx={{ padding: 1.5 }}
             onClick={handleBuyNow}
           >
-            Buy Now
+            Alım Yap
           </Button>
         </Grid>
       </Grid>

@@ -66,7 +66,7 @@ export default function StickyHeadTable({ userId }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`api/v1/assets/user/${localStorage.getItem("currentUser")}/tl`, { headers: { "Authorization": localStorage.getItem("tokenKey") } });
+        const response = await fetch(`api/v1/assets/user/${localStorage.getItem("selectedUserId")}/tl`, { headers: { "Authorization": localStorage.getItem("tokenKey") } });
         const assets = await response.json();
 
         const formattedRows = assets.map((asset) => ({

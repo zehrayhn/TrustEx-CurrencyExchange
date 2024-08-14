@@ -114,7 +114,7 @@ export default function MainPageBMOL() {
       .then((result) => {
         if (result && result.token) {
           localStorage.setItem("tokenKey", result.token);
-          localStorage.setItem("currentUser", result.userId);
+          localStorage.setItem("selectedUserId", result.userId);
           localStorage.setItem("userName", idNumber);
           localStorage.setItem("userPassword", password);
           setSuccessMessage("Kullanıcı başarılı bir şekilde kaydedildi");

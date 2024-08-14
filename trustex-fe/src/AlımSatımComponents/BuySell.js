@@ -48,7 +48,7 @@ export default function BuySellToggle() {
           }}
           onClick={() => setView('buy')}
         >
-          Buy
+          Satın Al
         </Button>
         <Button
           sx={{
@@ -61,7 +61,7 @@ export default function BuySellToggle() {
           }}
           onClick={() => setView('sell')}
         >
-          Sell
+          Satış Yap
         </Button>
       </ButtonGroup>
 

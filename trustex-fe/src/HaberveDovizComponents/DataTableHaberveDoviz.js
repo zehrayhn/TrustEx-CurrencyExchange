@@ -84,7 +84,7 @@ export default function StickyHeadTable() {
   const paginatedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
-    <Paper sx={{ width: '800px', height: '700px', overflow: 'hidden', position: 'absolute', top: '150px', left: '1070px' }}>
+    <Paper sx={{ width: '800px', height: '600px', overflow: 'hidden', position: 'absolute', top: '180px', left: '1070px' }}>
       <Box sx={{ padding: 2 }}>
         <TextField
           label="Arama"

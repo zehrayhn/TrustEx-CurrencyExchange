@@ -11,6 +11,6 @@ public class PersonnelCustomerDto {
     private String firstname;
     private String lastname;
     private String customerNumber;
-
+    private Long selectedUserId;
 
 }

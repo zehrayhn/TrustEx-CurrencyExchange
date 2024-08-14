@@ -14,7 +14,7 @@ function ResetPassword() {
 
     const handleResetPassword = async () => {
         try {
-            const response = await axios.put('http://localhost:9090/auth/reset-password',
+            const response = await axios.put('auth/reset-password',
                 { password: newPassword, confirmPassword: confirmPassword },
                 {
                     params: { token },

@@ -83,6 +83,7 @@ export default function MainPageBirey({ }) {
     const userId = localStorage.getItem("currentUser");
     const idNumber = localStorage.getItem("userName");
     const password = localStorage.getItem("userPassword");
+    
 
     fetch("auth/verify-and-authenticate", {
       method: "POST",
@@ -106,7 +107,9 @@ export default function MainPageBirey({ }) {
         if (result && result.userId) {
           localStorage.setItem("tokenKey", result.token);
           localStorage.setItem("currentUser", result.userId);
-          localStorage.setItem("customerNumber", result.customerNumber);
+          localStorage.setItem("selectedCustomerNumber", result.customerNumber);
+          localStorage.setItem("selectedUserId", result.userId);
+          localStorage.setItem("userType", result.userType);
           setSuccessMessage(result.message);
           setSnackbarOpen(true);
           navigate("/hesap-ozetim");

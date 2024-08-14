@@ -7,9 +7,9 @@ import backgroundImage from '../images/backgroundsp.jpg';
 export default function MainPageProfilBirey() {
   const navigate = useNavigate();
   const [totalAssetsValue, setTotalAssetsValue] = useState(0);
-  const [customerNumber, setCustomerNumber] = useState(localStorage.getItem('customerNumber'));
+  const [customerNumber, setCustomerNumber] = useState(localStorage.getItem('selectedCustomerNumber'));
   const [assets, setAssets] = useState([]);
-  const userId = localStorage.getItem('currentUser');
+  const userId = localStorage.getItem('selectedUserId');
   const currentUser = localStorage.getItem('currentUser');
 
 
@@ -43,7 +43,7 @@ export default function MainPageProfilBirey() {
         setTotalAssetsValue(totalValue);
         setAssets(data);
 
-        const userResponse = await fetch(`api/v1/users/${userId}`, { headers: { "Authorization": localStorage.getItem("tokenKey") } });
+        const userResponse = await fetch(`profile/${userId}`, { headers: { "Authorization": localStorage.getItem("tokenKey") } });
         const userData = await userResponse.json();
         setCustomerNumber(userData.customerNumber);
       } catch (error) {
@@ -158,7 +158,7 @@ export default function MainPageProfilBirey() {
                   top: '50px',
                   left: '30px'
                 }}>
-                  {localStorage.getItem("customerNumber")}
+                  {localStorage.getItem('selectedCustomerNumber')}
                 </Typography>
               </div>
             </div>

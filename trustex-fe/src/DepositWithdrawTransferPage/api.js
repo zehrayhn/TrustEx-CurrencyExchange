@@ -1,7 +1,7 @@
 const API_BASE_URL = 'api/v1';
 
 const getToken = () => localStorage.getItem('token');
-const getUserId = () => 1;
+const getUserId = () => localStorage.getItem('selectedUserId');
 
 
 export const fetchTransactions = async (userId) => {

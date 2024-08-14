@@ -40,7 +40,7 @@ const TransactionList = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch("/api/v1/transactions/getAll", {
+        const response = await fetch("/api/v1/transactions/byUser/"+localStorage.getItem("selectedUserId"), {
           method: "GET",
           headers: {
             "Authorization": localStorage.getItem("tokenKey"),

@@ -23,7 +23,7 @@ function DepositWithdrawPage() {
     const [isSelectOpen, setIsSelectOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
-    const userId = 1;
+    const userId = localStorage.getItem('selectedUserId');
 
     const currencyOptions = [
         { label: 'BAE Dirhemi', value: 'AED' },
@@ -332,11 +332,13 @@ function DepositWithdrawPage() {
                 `Seçili IBAN: ${depositIban}\n` +
                 `Uyarı: Müşteri numaranızı giriniz.`
             );
+            window.location.reload();
             setTransactions(updatedTransactions);
             setDepositAmount('');
             setWithdrawAmount('');
             setSelectedCurrency('');
         } catch (error) {
+            alert('İşlem başarısız. Lütfen tekrar deneyin.');
             console.error('İşlem gönderimi sırasında hata:', error);
         }
     };
@@ -352,6 +354,7 @@ function DepositWithdrawPage() {
             };
             const result = await postTransfer(transferData);
             alert('Transfer Başarılı');
+            window.location.reload();
             setTransfers([result, ...transfers]);
             setTransferAmount('');
             setSelectedTransferCurrency('');
@@ -558,7 +561,7 @@ function DepositWithdrawPage() {
                                 value={transferAmount}
                                 onChange={handleTransferAmountChange}
                             />
-                            <Button variant="contained" onClick={handleTransferSubmit} size="large">Gönder</Button>
+                            <Button variant="contained" onClick={handleTransferSubmit} size="large" disabled= {localStorage.getItem("userType") === "PERSONNEL" ? true : false } >Gönder</Button>
                         </div>
                     </div>
                     <div className="transfer-history">

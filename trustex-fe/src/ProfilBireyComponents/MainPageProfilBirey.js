@@ -31,7 +31,7 @@ export default function MainPageProfilBirey() {
   const [email, setEmail] = useState(mockProfile.email);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const userId = localStorage.getItem("currentUser");
+  const userId = localStorage.getItem("selectedUserId");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -40,6 +40,7 @@ export default function MainPageProfilBirey() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": localStorage.getItem("tokenKey"),
           },
         });
 
@@ -93,8 +94,10 @@ export default function MainPageProfilBirey() {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("tokenKey");
     localStorage.removeItem("customerNumber");
+    localStorage.removeItem("selectedCustomerNumber");
     localStorage.removeItem("userPassword");
     localStorage.removeItem("userName");
+    localStorage.removeItem("selectedUserId");
     navigate('/');
   };
 
@@ -119,6 +122,7 @@ export default function MainPageProfilBirey() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": localStorage.getItem("tokenKey"),
         },
         body: JSON.stringify(profileData),
       });

@@ -10,11 +10,11 @@ import backgroundImage from '../images/backgroundsp.jpg';
 function AssetsPageScreen() {
   const [totalAssetsValue, setTotalAssetsValue] = useState(0);
   const [assets, setAssets] = useState([]);
-  const userId = 1;
+  const userId = localStorage.getItem('selectedUserId');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const currentUser = localStorage.getItem('currentUser');
-  const customerNumber = localStorage.getItem('customerNumber');
+
+  const customerNumber = localStorage.getItem('selectedCustomerNumber');
   useEffect(() => {
     const loadAssets = async () => {
       try {

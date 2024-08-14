@@ -15,9 +15,10 @@ import logo from '../images/logo.png';
 function NavbarHesapOzetim() {
   const [openNavColor, setOpenNavColor] = useState(false);
   const navigate = useNavigate();
-
+const userType = localStorage.getItem('userType');
   const handlegirisClick = () => {
-    navigate('/hesap-ozetim');
+    userType === 'INDIVIDUAL' ? navigate('/hesap-ozetim') :
+    navigate('/personel-ana-sayfa');
   };
 
 

@@ -4,7 +4,7 @@ import { TextField, Button, Grid, Typography, InputAdornment, Slider, Box } from
 const Sell = ({ exchangeRate, currencyCode }) => {
   const [amount, setAmount] = useState('');
   const [assets, setAssets] = useState();
-  const userId = 1;
+  const userId = localStorage.getItem("selectedUserId");
 
   const handleAmountChange = (event) => {
     setAmount(event.target.value);
@@ -17,7 +17,7 @@ const Sell = ({ exchangeRate, currencyCode }) => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await fetch('/api/v1/assets/user/1/' + currencyCode, { headers: { "Authorization": localStorage.getItem("tokenKey") } });
+        const response = await fetch('/api/v1/assets/user/'+localStorage.getItem("selectedUserId")+'/' + currencyCode, { headers: { "Authorization": localStorage.getItem("tokenKey") } });
         if (!response.ok) {
           throw new Error('Failed to fetch exchange rate');
         }
@@ -83,7 +83,7 @@ const Sell = ({ exchangeRate, currencyCode }) => {
           <TextField
             fullWidth
             variant="filled"
-            label="Exchange Rate"
+            label="Döviz Kuru"
             value={digitSetting(1 / exchangeRate.sellRate)}
             InputProps={{
               readOnly: true,
@@ -95,7 +95,7 @@ const Sell = ({ exchangeRate, currencyCode }) => {
           <TextField
             fullWidth
             variant="filled"
-            label="Available Balance"
+            label="Kullanılabilir Bakıye"
             value={digitSetting(assets.amount)}
             InputProps={{
               readOnly: true,
@@ -107,7 +107,7 @@ const Sell = ({ exchangeRate, currencyCode }) => {
           <TextField
             fullWidth
             variant="outlined"
-            label="Amount to Sell"
+            label="Satılacak Miktar"
             value={amount}
             onChange={handleAmountChange}
             InputProps={{
@@ -131,7 +131,7 @@ const Sell = ({ exchangeRate, currencyCode }) => {
           <br />
           <Typography>Komisyon (TRY): {digitSetting(0.01 * (amount * 1 / exchangeRate.sellRate))}</Typography>
           <Typography>Toplam Tutar (TRY): {digitSetting((amount * (1 / exchangeRate.sellRate)) + (0.01 * (amount * 1 / exchangeRate.sellRate)))}</Typography>
-          <Typography>Kalan KullanÄ±labilir Bakiye ({exchangeRate.currencyCode}): {assets.amount - amount}</Typography>
+          <Typography>Kalan Kullanılabilir Bakiye ({exchangeRate.currencyCode}): {assets.amount - amount}</Typography>
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -141,7 +141,7 @@ const Sell = ({ exchangeRate, currencyCode }) => {
             sx={{ padding: 1.5 }}
             onClick={handleSellTransaction}
           >
-            Sell Now
+            Satış Yap
           </Button>
         </Grid>
       </Grid>

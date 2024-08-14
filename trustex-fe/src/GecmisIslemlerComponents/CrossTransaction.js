@@ -39,7 +39,7 @@ const TransactionList = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch("/api/v1/crossTransactions/getAllByUserId/" + 1, {
+        const response = await fetch("/api/v1/crossTransactions/getAllByUserId/" + localStorage.getItem("selectedUserId"), {
           method: "GET",
           headers: {
             "Content-Type": "application/json"

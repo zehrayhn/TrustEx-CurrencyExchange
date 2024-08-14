@@ -41,7 +41,7 @@ export default function MainPageCapraz() {
 
   const handleSubmit = () => {
     const requestBody = {
-      userId: 1,
+      userId: localStorage.getItem("selectedUserId"),
       baseCurrencyCode: selectedSellOption,
       targetCurrencyCode: selectedBuyOption,
       amount: amount

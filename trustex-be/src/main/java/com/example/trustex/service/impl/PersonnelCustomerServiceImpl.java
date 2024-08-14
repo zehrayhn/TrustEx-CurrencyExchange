@@ -98,7 +98,8 @@ public class PersonnelCustomerServiceImpl implements PersonnelCustomerService {
                 .map(customer -> new PersonnelCustomerDto(
                         customer.getFirstname(),
                         customer.getLastname(),
-                        customer.getCustomerNumber()
+                        customer.getCustomerNumber(),
+                        customer.getId()
                 ))
                 .collect(Collectors.toList());
     }

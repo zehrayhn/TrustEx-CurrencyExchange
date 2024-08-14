@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBContainer, MDBInput, MDBValidation, MDBValidationItem, MDBTypography } from 'mdb-react-ui-kit';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function MainPagePersonelAna() {
   const [searchText, setSearchText] = useState('');
@@ -7,7 +8,7 @@ export default function MainPagePersonelAna() {
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [error, setError] = useState(null);
 
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchAllCustomers = async () => {
       const token = localStorage.getItem("tokenKey"); 
@@ -17,7 +18,7 @@ export default function MainPagePersonelAna() {
         const personnelId =localStorage.getItem("currentUser")
       
 
-        const response = await fetch('api/v1/personnel-customers/${personnelId}/customer?search=', {
+        const response = await fetch(`api/v1/personnel-customers/${personnelId}/customer?search=`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -48,7 +49,7 @@ export default function MainPagePersonelAna() {
     const personnelId = localStorage.getItem("currentUser"); 
 
     try {
-      const response = await fetch('api/v1/personnel-customers/${personnelId}/customer?search=${searchText}', {
+      const response = await fetch(`api/v1/personnel-customers/${personnelId}/customer?search=${searchText}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -72,9 +73,11 @@ export default function MainPagePersonelAna() {
     setSearchText(e.target.value);
   };
 
-  const handleCustomerClick = (customerNumber) => {
+  const handleCustomerClick = (customerNumber,selectedUserId) => {
     localStorage.setItem('selectedCustomerNumber', customerNumber); 
+    localStorage.setItem("selectedUserId", selectedUserId)
     alert(`Seçilen müşteri numarası: ${customerNumber}`);
+    navigate("/hesap-ozetim")
   };
 
   return (
@@ -111,7 +114,7 @@ export default function MainPagePersonelAna() {
               <p>Ad: {customer.firstname}</p>
               <p>Soyad: {customer.lastname}</p>
               <p>Müşteri No: {customer.customerNumber}</p>
-              <button onClick={() => handleCustomerClick(customer.customerNumber)}>
+              <button onClick={() => handleCustomerClick(customer.customerNumber,customer.selectedUserId)}>
                 Seç
               </button>
               <hr />

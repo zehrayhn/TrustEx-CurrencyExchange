@@ -27,7 +27,7 @@ function SifremiUnuttum() {
     setErrorMessages([]);
     setSuccessMessage("");
 
-    fetch("http://localhost:9090/auth/forgot-password", {
+    fetch("auth/forgot-password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -19,5 +19,5 @@ public class UserProfileDto {
     private String mobilePhone;
     private String email;
     private LocalDate dateOfBirth;
-    //private String customerNumber;
+    private String customerNumber;
 }

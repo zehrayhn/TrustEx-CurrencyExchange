@@ -79,7 +79,7 @@ export default function MainPageMüsteriEkle() {
     const userId = localStorage.getItem("currentUser");
     console.log("Current User:", userId);
 
-    fetch('api/v1/personnel-customers?personnelId=${userId}', {
+    fetch(`api/v1/personnel-customers?personnelId=${userId}`, {
 
       method: "POST",
       headers: {
@@ -115,14 +115,14 @@ const handleRegisterButton = () => {
   sendRegisterRequest();
 
   {
-    //   setIdNumber("");
-    //   setFirstname("");
-    //   setLastname("");
-    //   setCountry("");
-    //   setDateOfBirth("");
-    //   setMobilePhone("");
-    //   setEmail("");
-    //   setConfirmPassword("");
+      setIdNumber("");
+      setFirstname("");
+      setLastname("");
+      setCountry("");
+      setDateOfBirth("");
+      setMobilePhone("");
+      setEmail("");
+      setConfirmPassword("");
   }
 };
 

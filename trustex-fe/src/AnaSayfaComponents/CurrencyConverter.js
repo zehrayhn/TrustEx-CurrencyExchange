@@ -18,7 +18,7 @@ const CurrencyConverter = () => {
   const [error, setError] = useState(null);
   const fetchCurrencies = async () => {
     try {
-      const res = await fetch("/api/v1/currencies/getAllCurrencies", { headers: { "Authorization": localStorage.getItem("tokenKey") } });
+      const res = await fetch("/api/v1/currencies/getAllCurrencies");
       if (!res.ok) throw new Error("Network response was not ok");
       const data = await res.json();
       setCurrencies(data);
@@ -44,7 +44,7 @@ const CurrencyConverter = () => {
       const res = await fetch("/api/v1/convert", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", "Authorization": localStorage.getItem("tokenKey"),
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           amount: parseFloat(amount),

@@ -15,29 +15,28 @@ export default function MainPageKurum() {
   const [verificationCode, setVerificationCode] = useState("");
   const [showVerificationField, setShowVerificationField] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [isIndividual, setIsIndividual] = useState(true);
+  const [isIndividual, setIsIndividual] = useState(true); 
   const [message, setMessage] = useState("");
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
 
 
 
-  const handleFetchError = (res) => {
-    return res.json().then((json) => {
-      if (json.errors && Array.isArray(json.errors)) {
-        setErrorMessages(json.errors);
-      } else {
-        setErrorMessages(["Bir hata oluştu"]);
-      }
-    }).catch(() => {
-      setErrorMessages(["Hata mesajı alınamadı."]);
-    });
-  };
-
+ const handleFetchError = (res) => {
+  return res.json().then((json) => {
+    if (json.errors && Array.isArray(json.errors)) {
+      setErrorMessages(json.errors);
+    } else {
+      setErrorMessages(["Bir hata oluştu"]);
+    }
+  }).catch(() => {
+    setErrorMessages(["Hata mesajı alınamadı."]);
+  });
+};
 
   const sendLoginRequest = () => {
 
-    const userType = "INDIVIDUAL";
+   const userType="INDIVIDUAL";
     fetch("auth/send-verification-code", {
       method: "POST",
       headers: {
@@ -51,26 +50,26 @@ export default function MainPageKurum() {
         taxNumber: taxNumber,
       }),
     })
-      .then((res) => {
-        if (!res.ok) {
-          return handleFetchError(res);
-        }
-        return res.json();
-      })
-      .then((result) => {
-        if (result) {
-          setShowVerificationField(true);
-          setSuccessMessage("Doğrulama kodu gönderildi.");
-          setSnackbarOpen(true);
-
-
-        }
-      })
-      .catch((err) => {
-        setErrorMessages([err.message]);
-
+    .then((res) => {
+      if (!res.ok) {
+        return handleFetchError(res);
+      }
+      return res.json();
+    })
+    .then((result) => {
+      if (result) {
+        setShowVerificationField(true);
+        setSuccessMessage("Doğrulama kodu gönderildi.");
         setSnackbarOpen(true);
-      });
+      
+      
+      }
+    })
+    .catch((err) => {
+      setErrorMessages([err.message]);
+
+      setSnackbarOpen(true);
+    });
   };
   const sendVerificationCode = () => {
 
@@ -88,24 +87,25 @@ export default function MainPageKurum() {
 
       }),
     })
-      .then((res) => {
-        if (!res.ok) {
-          return handleFetchError(res);
-        }
-        return res.json();
-      })
-      .then((result) => {
-        if (result && result.userId) {
-          localStorage.setItem("tokenKey", result.token);
-          localStorage.setItem("currentUser", result.userId);
-          setSuccessMessage(result.message);
-          setSnackbarOpen(true);
-          navigate("/personel-ana-sayfa");
-        }
-      })
-      .catch((err) => {
-        setErrorMessages([err.message]);
-      });
+    .then((res) => {
+      if (!res.ok) {
+        return handleFetchError(res);
+      }
+      return res.json();
+    })
+    .then((result) => {
+      if(result && result.userId) {
+      localStorage.setItem("tokenKey", result.token);
+      localStorage.setItem("currentUser", result.userId);
+      localStorage.setItem("userType", result.userType);
+      setSuccessMessage(result.message);
+      setSnackbarOpen(true);
+      navigate("/personel-ana-sayfa");
+    }
+    })
+    .catch((err) => {
+      setErrorMessages([err.message]);
+    });
   };
 
   const handleLoginButton = () => {
@@ -115,7 +115,7 @@ export default function MainPageKurum() {
     sendLoginRequest();
   };
 
-
+ 
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -149,24 +149,18 @@ export default function MainPageKurum() {
         <Grid container spacing={3} style={{ marginTop: '24px' }}>
           <Grid item xs={12} style={{ padding: '16px' }}>
             <div
-              style={{
-                position: 'absolute', top: '175px', left: '1152px', width: '575px', height: '540px',
-                backgroundColor: '#031a55', color: 'white', padding: '50px', borderRadius: '4px'
-              }}
+              style={{ position: 'absolute', top: '175px', left: '1152px', width: '575px', height: '540px', 
+                backgroundColor: '#031a55', color: 'white', padding: '50px', borderRadius: '4px' }}
             >
-              <MDBBtnGroup aria-label='Basic example' style={{ position: 'relative', top: '80px', left: '78px', width: '300px', height: '60px', }}>
-                <MDBBtn href='#' active onClick={handleBireyselClick}
-                  style={{
-                    backgroundColor: 'white', color: 'black', borderRight: '1px solid black',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
+             <MDBBtnGroup aria-label='Basic example' style={{ position: 'relative', top: '80px', left: '78px', width: '300px', height: '60px', }}>
+                <MDBBtn  href='#' active onClick={handleBireyselClick}
+                  style={{ backgroundColor: 'white', color: 'black',  borderRight: '1px solid black', 
+                     display: 'flex',  alignItems: 'center',justifyContent: 'center'}}>
                   Bireysel
                 </MDBBtn>
                 <MDBBtn href='#' active onClick={handleKurumsalClick}
-                  style={{
-                    backgroundColor: 'white', color: 'black', borderLeft: '1px solid black',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
+                style={{ backgroundColor: 'white', color: 'black',  borderLeft: '1px solid black', 
+                  display: 'flex',  alignItems: 'center',justifyContent: 'center'}}>
                   Personel
                 </MDBBtn>
               </MDBBtnGroup>
@@ -181,19 +175,19 @@ export default function MainPageKurum() {
                 <MDBInput label="Personel Kimlik Numarası" id="form1" type="soyad" className="w-1/2 h-10 mt-2 ml-0 bg-white text-black" value={idNumber} onChange={(e) => setIdNumber(e.target.value)} />
               </div>
               <div className="absolute w-[400px] h-[50px] bg-darkblue text-white p-[50px] rounded-lg" style={{ top: '170px', left: '80px' }}>
-                <MDBInput label="Şifre" id="form1" type="ŞifreK" className="w-1/2 h-10 mt-20 ml-0 bg-white text-black" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <MDBInput label="Şifre" id="form1" type="password" className="w-1/2 h-10 mt-20 ml-0 bg-white text-black" value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               {showVerificationField && (
                 <div>
-                  <MDBInput label="Doğrulama Kodu" id="verificationCode" type="text" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)}
-                    style={{ width: '475px', marginTop: '227px', marginLeft: '00px', color: '#white', padding: '10px', fontSize: '16px', backgroundColor: 'white' }} />
-                  <Button
-                    onClick={handleVerificationCodeSubmit} variant="contained" style={{ marginTop: '20px', backgroundColor: '#b8dfff', color: 'black', marginLeft: '400px' }} >
-                    Doğrula
-                  </Button>
-                </div>
+                <MDBInput label="Doğrulama Kodu" id="verificationCode"  type="text"value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)}
+                  style={{  width: '475px',  marginTop: '253px', marginLeft: '00px', color: '#white',  padding: '10px', fontSize: '16px', backgroundColor:'white'}}/>
+                <Button
+                  onClick={handleVerificationCodeSubmit} variant="contained"style={{ marginTop: '20px', backgroundColor:'#b8dfff', color:'black', marginLeft: '400px' }} >
+                  Doğrula
+                </Button>
+              </div>
               )}
-
+           
             </div>
             <Button
               color="inherit"
@@ -204,41 +198,41 @@ export default function MainPageKurum() {
               Giriş Yap
             </Button>
             <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-              <Alert onClose={handleSnackbarClose} severity={errorMessages.length > 0 ? 'error' : 'success'}>
-                {errorMessages.length > 0 ? errorMessages.join(', ') : successMessage}
-              </Alert>
-            </Snackbar>
+  <Alert onClose={handleSnackbarClose} severity={errorMessages.length > 0 ? 'error' : 'success'}>
+    {errorMessages.length > 0 ? errorMessages.join(', ') : successMessage}
+  </Alert>
+</Snackbar>
             <Typography variant="h8" style={{ position: 'absolute', top: '635px', left: '1270px', whiteSpace: 'nowrap', color: 'white' }}>
               Üye Değil Misin?
             </Typography>
-            <Link
-              to="/bireysel-musteri-ol"
-              style={{ position: 'absolute', top: '635px', left: '1390px', color: 'grey', textDecoration: 'underline', display: 'inline-block', }}>
-              Müşterimiz Ol
+            <Link 
+                  to="/bireysel-musteri-ol"
+                  style={{position: 'absolute',top: '635px',left: '1390px',color: 'grey', textDecoration: 'underline',display: 'inline-block', }}>
+                  Müşterimiz Ol
             </Link>
-            <Link to="/sifre-merkezi" style={{ position: 'absolute', top: '635px', left: '1500px', color: 'grey', textDecoration: 'underline' }}>Şifremi Unuttum</Link>
+            <Link   to="/sifre-merkezi"   style={{ position: 'absolute', top: '635px', left: '1500px', color: 'grey',textDecoration: 'underline' }}>Şifremi Unuttum</Link>
           </Grid>
         </Grid>
         {errorMessages.length > 0 && (
-          <div style={{
-            backgroundColor: '#f8d7da',
-            color: '#721c24',
-            padding: '15px',
-            borderRadius: '5px',
-            border: '1px solid #f5c6cb',
-            marginTop: '-490px',
-            marginBottom: '20px'
-          }}>
-            <strong></strong>
-            <ul style={{ padding: '0', listStyleType: 'none', margin: '0' }}>
-              {errorMessages.map((error, index) => (
-                <li key={index} style={{ marginBottom: '5px' }}>
-                  {error}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+                <div style={{
+                  backgroundColor: '#f8d7da',
+                  color: '#721c24',
+                  padding: '15px',
+                  borderRadius: '5px',
+                  border: '1px solid #f5c6cb',
+                  marginTop: '10px',  
+                  marginBottom: '20px' 
+                }}>
+                  <strong></strong>
+                  <ul style={{ padding: '0', listStyleType: 'none', margin: '0' }}>
+                    {errorMessages.map((error, index) => (
+                      <li key={index} style={{ marginBottom: '5px' }}>
+                        {error}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
 
       </Container>
